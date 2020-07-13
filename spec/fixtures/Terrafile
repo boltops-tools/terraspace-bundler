@@ -1,0 +1,6 @@
+org "boltopspro" # set default org
+
+# GitHub repo with default org
+#mod "elb", source: "terraform-aws-elb", version: "master"
+#mod "ec2", source: "terraform-aws-ec2", version: "branch-name"
+
