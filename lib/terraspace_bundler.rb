@@ -17,6 +17,7 @@ DslEvaluator.backtrace_reject = "lib/terraspace_bundler"
 
 module TerraspaceBundler
   class Error < StandardError; end
+  class GitError < Error; end
   extend Core
 end
 

@@ -1,5 +1,5 @@
 class TerraspaceBundler::Mod
-  module TmpPaths
+  module PathConcern
     def setup_tmp
       FileUtils.mkdir_p(cache_root)
       FileUtils.mkdir_p(stage_root)

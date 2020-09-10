@@ -3,16 +3,19 @@ module TerraspaceBundler
     include DslEvaluator
     include Syntax
 
-    class_attribute :meta
-    self.meta = {global: {}, mods: []}
+    class_attribute :meta, default: {global: {}, mods: []}
 
     def run
       evaluate_file(TB.config.terrafile)
-      self.class.meta
+      self
     end
 
     def meta
       self.class.meta
+    end
+
+    def global
+      meta[:global]
     end
   end
 end

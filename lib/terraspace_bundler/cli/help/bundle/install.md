@@ -1,3 +1,3 @@
 ## Examples
 
-    terraspace-bundler bundle install
+    terraspace bundle install
