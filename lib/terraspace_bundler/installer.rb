@@ -1,45 +1,27 @@
 module TerraspaceBundler
   class Installer < CLI::Base
-    extend Memoist
-
-    def initialize(options={})
-      super
-      @download = options[:download].nil? ? true : options[:download]
-    end
-
     def run
-      Setup.new(@options).setup!
-      download
-      export
-      logger.info "Modules saved to #{TB.config.export_path}"
+      Syncer.new(@options).run
+      Exporter.new(@options).run
+      finish_message
     end
 
-    def download
-      return unless @download
-
-      if File.exist?(TB.config.lockfile)
-        puts "Bundling modules from #{TB.config.lockfile}..."
-      else
-        Updater.new(@options).run(without_install: true) # creates Terrafile.lock
+    def finish_message
+      no_modules_found = true
+      export_paths.each do |export_path|
+        found = Dir.exist?(export_path) && !Dir.empty?(export_path)
+        next unless found
+        logger.info  "Modules saved to #{export_path}"
+        no_modules_found = false
       end
 
-      Syncer.new(mods).run
+      logger.info("No modules were found.") if no_modules_found
     end
 
-    def export
-      locked_mods.each(&:export)
-    end
-
-    def mods
-      locked_mods.map(&:to_mod)
-    end
-    memoize :mods
-
-    def locked_mods
-      data = YAML.load_file(TB.config.lockfile).deep_symbolize_keys
-      data.map do |name, info|
-        Mod::Locked.new(name, info)
-      end
+    def export_paths
+      export_paths = Terrafile.instance.mods.map(&:export_to).compact.uniq
+      export_paths << TB.config.export_path
+      export_paths
     end
   end
 end

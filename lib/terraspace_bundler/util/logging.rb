@@ -1,4 +1,4 @@
-module TerraspaceBundler
+module TerraspaceBundler::Util
   module Logging
     def logger
       TerraspaceBundler.logger

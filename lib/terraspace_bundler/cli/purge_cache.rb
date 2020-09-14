@@ -1,7 +1,7 @@
 class TerraspaceBundler::CLI
-  class Clean < Base
-    include TB::Mod::TmpPaths
-    include TB::Logging
+  class PurgeCache < Base
+    include TB::Mod::PathConcern
+    include TB::Util::Logging
 
     def run
       FileUtils.rm_rf(tmp_root)

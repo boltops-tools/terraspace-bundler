@@ -1,5 +1,5 @@
 class TerraspaceBundler::CLI
-  class Install < Base
+  class Runner < Base
     def run
       TB::Installer.new(@options).run
     end

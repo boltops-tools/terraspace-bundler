@@ -1,85 +1,53 @@
 module TerraspaceBundler
   class Mod
-    extend Memoist
-    include TB::Util::Registry
+    extend PropsExtension
+    props :name, :source, :url, :subfolder, :type, :export_to
 
-    attr_reader :branch, :ref, :tag, :sha, :source
-    def initialize(data={}, global={})
-      @data, @global = data, global
-      @args = data[:args]
-      @options = data[:options]
-
-      # support variety of options, prefer version
-      @version = @options[:version]
-      @branch = @options[:branch]
-      @ref = @options[:ref]
-      @tag = @options[:tag]
+    attr_reader :props, :version, :ref, :tag, :branch
+    def initialize(props={})
+      @props = props.symbolize_keys
+      # These props are used for version comparing by VersionComparer
+      @version, @ref, @tag, @branch = @props[:version], @props[:ref], @props[:tag], @props[:branch]
     end
 
-    def source
-      if @options[:source].split('/').size == 1
-        "#{org}/#{@options[:source]}"
-      else
-        @options[:source]
-      end
-    end
-
-    def full_org
-      normalize_git_url(org)
-    end
-
-    def org
-      obtain_org(@options[:source], @global[:org])
-    end
-
-    def url
-      normalize_url(source)
-    end
-
-    def normalize_url(source)
-      return registry_github if registry?(source)
-      normalize_git_url(source)
-    end
-
-    def path
-      @options[:path]
-    end
-
-    def name
-      @args.first
-    end
-
-    def version
-      @version || @ref || @tag || @branch
+    def sha
+      # sha will already be set if coming from Terrafile.lock
+      # sha will be lazily fetch set if coming from Terrafile
+      @props[:sha] ||= fetch_sha
     end
 
     def checkout_version
-      v = version
-      v = "v#{v}" if registry?(source) && @version && !v.starts_with?("v")
+      v = detected_version
+      v = "v#{v}" if type == "registry" && @version && !v.starts_with?("v")
       v
     end
 
-    def sync
-      sync = Sync.new(self, url)
-      sync.run
-      @sha = sync.sha
-    end
-    memoize :sync
-
-    def normalize_git_url(s)
-      if git_url?(s)
-        s
-      else
-        "#{base_url}#{s}"
-      end
+    # use url instead of source because for registry modules, the repo name is different
+    def repo
+      url_words[-1]
     end
 
-    def base_url
-      @global[:base_url] || "git@github.com:"
+    def org
+      url_words[-2] # second to last word
     end
 
-    def git_url?(s)
-      s.include?("http") || s.include?("git@")
+    def full_repo
+      "#{org}/#{repo}"
+    end
+
+  private
+    def fetch_sha
+      downloader = Downloader.new(self)
+      downloader.run
+      downloader.sha
+    end
+    # support variety of options, prefer version
+    def detected_version
+      @version || @ref || @tag || @branch
+    end
+
+    def url_words
+      url.split('/')
     end
   end
 end

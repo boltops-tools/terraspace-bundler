@@ -1,12 +1,6 @@
 # terraspace-bundler
 
-Bundles terraform modules based on a `Terrafile` to the `vendor/modules` folder.
-
-## Installation
-
-To install:
-
-    gem install terraspace-bundler
+Bundles terraform modules based on a `Terrafile` to the `vendor/modules` folder. Used by the [Terraspace Terraform Framework](https://terraspace.cloud/).
 
 ## Usage
 
@@ -26,56 +20,110 @@ mod "rds", source: "boltopspro/terraform-aws-rds", version: "v0.1.0"
 mod "sg", source: "terraform-aws-modules/security-group/aws", version: "3.10.0"
 ```
 
-Running `terraspace bundle` creates the `Terrafile.lock` file, which locks the downloaded versions.
+## Install
+
+Running `terraspace bundle` creates the `Terrafile.lock` file, which locks the versions.
 
     terraspace bundle
 
 ## Updating
 
-To update all the locked versions in `Terrafile.lock` run `terraspace bundle update`. You can also simply delete the `Terrafile.lock` file.
+To update all the locked versions in `Terrafile.lock` run `terraspace bundle update`. You can also delete the `Terrafile.lock` file first.
 
     terraspace bundle update
 
-You can selectively update only one module:
+You can selectively update multiple modules:
 
-    terraspace bundle update MOD
+    terraspace bundle update MODS
+    terraspace bundle update mod1 mod2
 
-## Removing vendor/modules
+## List & Info
 
-The `terraspace bundle` commands will only update the modules it knows about in `Terrafile`. To clear out old modules, delete them from `vendor/modules`. You can clean them all out like so:
+    terraspace bundle list
+    terraspace bundle info mod1
 
-    rm -rf vendor/modules
-    terraspace bundle update
+## DSL Methods
 
-## base url
+Some of these are methods that apply globally at the Terrafile level. Some of these are options that apply the at the mod method level.
+
+### Terrafile level
+
+Name | Description | Default
+--- |  --- | ---
+base_clone_url | Base clone url to use | git@gihtub.com:
+export_path |  Where the modules get exported to saved to. | vendor/modules
+export_purge | Where or not to clean up all existing exported modules folder first. | true
+
+### Mod Method level
+
+Name | Description | Default
+--- |  --- | ---
+subfolder | The subfolder where the module lives within the repo. | nil
+export_to | Overrides the export_path Terrafile level option. With this one-off option, other modules in this folder will not be purged. | nil
+
+Examples of some of the options are below:
+
+### base url
 
 The base url used for clone is `git@github.com:`. You can change it with `base_url`, example:
 
 ```ruby
-org "boltops-tools" # set default org
 base_url "https://github.com/"  # default base url for git clone
-
-mod "s3", source: "terraform-aws-s3", version: "master"
+# ...
 ```
 
-## export_path
+### export_path
 
 The default export path is `vendor/modules`, you can change it:
 
 ```ruby
-org "boltops-tools" # set default org
 export_path "app/modules"
-
-mod "s3", source: "terraform-aws-s3", version: "master"
+# ...
 ```
+
+## prune
+
+The `terraspace bundle` commands removes all files in the export_path, `vendor/modules`, by default. You can disable this behavior with:
+
+```ruby
+export_purge false
+# ...
+```
+
+### subfolder
+
+The default export path is `vendor/modules`, you can change it:
+
+```ruby
+# ...
+mod "s3", source: "terraform-aws-s3", subfolder: "path/to/module/s3"
+```
+
+## Config Options
+
+You can also configure some behavior with `TB.config`. IE: `TB.config.terrafile = "/path/to/Terrafile"`
+
+Name | Description | Default
+--- | --- | ---
+base_clone_url | Base git url to use for cloning | git@github.com:
+export_path | Where to export the modules to. Can also be set with the env var TB_EXPORT_PATH | vendor/modules
+export_purge | Whether or not to prune all the modules | true
+logger | Logger instance
+terrafile | The Terrafile path. Can also be set with the env TB_TERRAFILE || "Terrafile"
+
+## Installation
+
+To install:
+
+    gem install terraspace-bundler
 
 ## Notes
 
-* Simple implementation for [Terraspace](https://terraspace.cloud/) use.
+* This is a simple implementation for [Terraspace](https://terraspace.cloud/) use.
 * Handles updating the `Terrafile.lock` based on the `Terrafile`
 * Others running the `terraspace bundle install` will install the exact same module versions based the `Terrafile.lock`.
 * To update `Terraform.lock` run `terraspace bundle update`.
-* The repos are downloaded to `/tmp/terraspace-bundler` area as a cache. Delete the cache by running `terraspace bundle clean`.
+* The repos are downloaded to `/tmp/terraspace-bundler` area as a cache. Delete the cache by running `terraspace bundle purge_cache`.
 
 ## Contributing
 

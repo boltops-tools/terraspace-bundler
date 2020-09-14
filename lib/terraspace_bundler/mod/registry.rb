@@ -3,8 +3,8 @@ require 'open-uri'
 
 class TerraspaceBundler::Mod
   class Registry
-    def initialize(mod)
-      @mod = mod
+    def initialize(source, version)
+      @source, @version = source, version
     end
 
     # Terrafile example
@@ -25,12 +25,12 @@ class TerraspaceBundler::Mod
     #     https://registry.terraform.io/v1/modules/terraform-aws-modules/sqs/aws/download
     #
     # The specific version returns an 204 and then we grab the download url info form the x-terraform-get header.
-    def to_github
+    def github_url
       base_site = "https://registry.terraform.io"
       base_url = "#{base_site}/v1/modules"
 
-      version = @mod.version.sub(/^v/,'') if @mod.version # v1.0 => 1.0
-      api_url = [base_url, @mod.source, version, "download"].compact.join('/')
+      version = @version.sub(/^v/,'') if @version # v1.0 => 1.0
+      api_url = [base_url, @source, version, "download"].compact.join('/')
       resp = http_request(api_url)
 
       case resp.code.to_i
@@ -44,7 +44,9 @@ class TerraspaceBundler::Mod
         raise "Unable to lookup up module in Terraform Registry: #{resp}"
       end
 
-      download_url.sub(%r{/archive/.*},'')
+      url = download_url.sub(%r{/archive/.*},'')
+      # IE: git::https://github.com/terraform-aws-modules/terraform-aws-security-group?ref=v3.10.0
+      url.sub(/^git::/,'').sub(/\?.*/,'')
     end
 
   private

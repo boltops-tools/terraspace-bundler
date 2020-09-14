@@ -4,10 +4,7 @@ module TerraspaceBundler
 
     @@logger = nil
     def logger
-      return @@logger if @@logger
-      @@logger = Logger.new($stdout)
-      @@logger.level = ENV['TB_LOG_LEVEL'] || 'info'
-      @@logger
+      config.logger
     end
 
     def logger=(v)
@@ -17,5 +14,13 @@ module TerraspaceBundler
     def config
       Config.instance.config
     end
+
+    # DSL is evaluated once lazily when it get used
+    def dsl
+      dsl = Dsl.new
+      dsl.run
+      dsl
+    end
+    memoize :dsl
   end
 end
