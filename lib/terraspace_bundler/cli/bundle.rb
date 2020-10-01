@@ -22,7 +22,7 @@ class TerraspaceBundler::CLI
     long_desc Help.text("bundle/install")
     terrafile_option.call
     def install
-      Runner.new(options).run
+      TB::Runner.new(options).run
     end
 
     desc "purge_cache", "Purge cache."
@@ -35,7 +35,7 @@ class TerraspaceBundler::CLI
     long_desc Help.text("bundle/update")
     terrafile_option.call
     def update(*mods)
-      Runner.new(options.merge(mods: mods, mode: "update")).run
+      TB::Runner.new(options.merge(mods: mods, mode: "update")).run
     end
   end
 end

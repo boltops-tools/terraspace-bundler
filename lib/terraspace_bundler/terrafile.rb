@@ -3,7 +3,6 @@ module TerraspaceBundler
     include Singleton
     extend Memoist
     include TB::Util::Logging
-    include Dsl::Concern
 
     # dsl meta example:
     # {:global=>{:org=>"boltopspro"},
@@ -11,7 +10,7 @@ module TerraspaceBundler
     #   [{:args=>["eks"], :options=>{:source=>"terraform-aws-eks"}},
     #   {:args=>["vpc"], :options=>{:source=>"terraform-aws-vpc"}}]}
     def mods
-      dsl.meta[:mods].map do |params|
+      TB.dsl.meta[:mods].map do |params|
         new_mod(params)
       end
     end

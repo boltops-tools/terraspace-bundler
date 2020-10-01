@@ -1,4 +1,4 @@
-describe TB::CLI::Runner do
+describe TB::Runner do
   let(:runner) { described_class.new }
 
   context "runner" do

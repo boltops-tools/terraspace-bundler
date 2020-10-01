@@ -1,7 +1,6 @@
 module TerraspaceBundler
   class Syncer
     include TB::Util::Logging
-    include Dsl::Concern
 
     def initialize(options={})
       @options = options
@@ -31,17 +30,18 @@ module TerraspaceBundler
     end
 
     def sync_mods
+      # VersionComparer is used in lockfile.sync and does heavy lifting to check if mod should be updated and replaced
+      TB::Lockfile::VersionComparer.update_mode = @options[:mode] == "update"
       terrafile.mods.each do |mod|
-        update = update?(mod)
-        next unless update
+        next unless sync?(mod)
+        logger.debug "Syncing #{mod.name}"
         lockfile.sync(mod) # update (if version mismatch) or create (if missing)
       end
     end
 
-    def update?(mod)
+    def sync?(mod)
       names = @options[:mods]
-      return true if names.nil? || names.empty? # when empty never skip update
-      names.include?(mod.name)
+      names.blank? or names.include?(mod.name)
     end
 
     def validate!

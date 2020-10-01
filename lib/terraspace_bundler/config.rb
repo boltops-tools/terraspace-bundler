@@ -5,11 +5,12 @@ module TerraspaceBundler
 
     def config
       config = ActiveSupport::OrderedOptions.new
-      config.base_clone_url = "git@github.com:"
-      config.export_path = ENV['TB_EXPORT_PATH'] || "vendor/modules"
+      config.base_clone_url = "https://github.com/"
+      config.export_to = ENV['TB_EXPORT_TO'] || "vendor/modules"
       config.export_purge = ENV['TB_EXPORT_PRUNE'] == '0' ? false : true
       config.lockfile = "#{config.terrafile}.lock"
       config.logger = new_logger
+      config.stack_options = {dest: "app/stacks", purge: nil, examples: "examples"}  # Note: Important purge is nil not false so can fallback to Terrafile-level stack_options
       config.terrafile = ENV['TB_TERRAFILE'] || "Terrafile"
       config
     end
