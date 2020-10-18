@@ -3,7 +3,11 @@
 All notable changes to this project will be documented in this file.
 This project *loosely tries* to adhere to [Semantic Versioning](http://semver.org/), even before v1.0.
 
+## [0.3.1]
+- #3 all_stacks: only consider dirs
+
 ## [0.3.0]
+- #2 bundle improvements
 - change `base_clone_url` default from `git@github.com:` to `https://github.com/`
 - mod-level stack option
 - terrafile-level stack_options
