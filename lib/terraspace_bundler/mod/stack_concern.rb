@@ -17,8 +17,9 @@ class TerraspaceBundler::Mod
     def all_stacks
       stack = TerraspaceBundler::Exporter::Stacks::Stack.new(self) # to get the mod src path
       expr = "#{stack.examples_folder}/*"
-      Dir.glob(expr).map do |path|
-        example = File.basename(path)
+      dirs = Dir.glob(expr).select { |path| File.directory?(path) }
+      dirs.map do |dir|
+        example = File.basename(dir)
         # Set name so multiple app/stacks are created instead of just one app/stack/MOD
         {
           name: example,
