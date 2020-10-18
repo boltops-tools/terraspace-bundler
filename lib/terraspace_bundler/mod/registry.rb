@@ -3,6 +3,8 @@ require 'open-uri'
 
 class TerraspaceBundler::Mod
   class Registry
+    include TB::Util::Logging
+
     def initialize(source, version)
       @source, @version = source, version
     end
@@ -41,7 +43,8 @@ class TerraspaceBundler::Mod
         resp = http_request(next_url)
         download_url = resp.header["x-terraform-get"]
       else
-        raise "Unable to lookup up module in Terraform Registry: #{resp}"
+        logger.error "ERROR: Unable to lookup up module in Terraform Registry: #{@source}".color(:red)
+        exit 1
       end
 
       url = download_url.sub(%r{/archive/.*},'')

@@ -8,11 +8,11 @@ module TerraspaceBundler
     # {"vpc"=>
     #   {"sha"=>"52328b2b5197f9b95e3005cfcfb99595040ee45b",
     #   "source"=>"org/terraform-aws-vpc",
-    #   "url"=>"git@github.com:org/terraform-aws-vpc"},
+    #   "url"=>"https://github.com/org/terraform-aws-vpc"},
     # "instance"=>
     #   {"sha"=>"570cca3ea7b25e3af1961dc57b27ca2c129b934a",
     #   "source"=>"org/terraform-aws-instance",
-    #   "url"=>"git@github.com:org/terraform-aws-instance"}}
+    #   "url"=>"https://github.com/org/terraform-aws-instance"}}
     @@mods = nil
     def mods
       return @@mods if @@mods
@@ -29,9 +29,7 @@ module TerraspaceBundler
 
     # update (if version mismatch) or create (if missing)
     def sync(mod)
-      changed = changed?(mod)
-      logger.debug "Detecting change for mod #{mod.name} changed #{changed.inspect}"
-      replace!(mod) if changed
+      replace!(mod) if changed?(mod)
     end
 
     # mod built from Terrafile
@@ -45,7 +43,7 @@ module TerraspaceBundler
 
       comparer = VersionComparer.new(found, mod)
       comparer.run
-      logger.debug(comparer.reason) if comparer.reason
+      logger.debug("REASON: #{comparer.reason}") if comparer.reason
       comparer.changed?
     end
 

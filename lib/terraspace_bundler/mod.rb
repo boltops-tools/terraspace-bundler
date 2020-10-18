@@ -1,19 +1,15 @@
 module TerraspaceBundler
   class Mod
     extend PropsExtension
-    props :name, :source, :url, :subfolder, :type, :export_to
+    props :export_to, :name, :sha, :source, :subfolder, :type, :url
+
+    include StackConcern
 
     attr_reader :props, :version, :ref, :tag, :branch
     def initialize(props={})
       @props = props.symbolize_keys
       # These props are used for version comparing by VersionComparer
       @version, @ref, @tag, @branch = @props[:version], @props[:ref], @props[:tag], @props[:branch]
-    end
-
-    def sha
-      # sha will already be set if coming from Terrafile.lock
-      # sha will be lazily fetch set if coming from Terrafile
-      @props[:sha] ||= fetch_sha
     end
 
     def checkout_version
@@ -35,12 +31,13 @@ module TerraspaceBundler
       "#{org}/#{repo}"
     end
 
-  private
-    def fetch_sha
+    def latest_sha
       downloader = Downloader.new(self)
       downloader.run
       downloader.sha
     end
+
+  private
     # support variety of options, prefer version
     def detected_version
       @version || @ref || @tag || @branch

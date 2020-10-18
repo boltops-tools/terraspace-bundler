@@ -16,9 +16,7 @@ class TerraspaceBundler::Mod
       FileUtils.mkdir_p(org_path)
 
       Dir.chdir(org_path) do
-        unless File.exist?(@mod.repo)
-          sh "git clone #{@mod.url}"
-        end
+        clone unless File.exist?(@mod.repo)
 
         Dir.chdir(@mod.repo) do
           git "pull"
@@ -27,12 +25,33 @@ class TerraspaceBundler::Mod
         end
       end
     end
+    memoize :run
+
+    def clone
+      sh "git clone #{@mod.url}"
+    rescue TB::GitError => e
+      logger.error "ERROR: #{e.message}".color(:red)
+      exit 1
+    end
 
     def stage
       copy_to_stage
-      # TODO: if there's no master, need to checkout if its the default branch
-      checkout = @mod.checkout_version || "master"
+      checkout = @mod.checkout_version || default_branch
       switch_version(checkout)
+    end
+
+    # Note: if not in a git repo, will get this error message in stderr
+    #
+    #    fatal: Not a git repository (or any of the parent directories): .git
+    #
+    def default_branch
+      origin = `git remote show origin`.strip
+      found = origin.split("\n").find { |l| l.include?("HEAD") }
+      if found
+        found.split(':').last.strip
+      else
+        'master'
+      end
     end
 
     def switch_version(version)

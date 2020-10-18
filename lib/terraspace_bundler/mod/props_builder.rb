@@ -3,7 +3,6 @@
 class TerraspaceBundler::Mod
   class PropsBuilder
     extend Memoist
-    include TerraspaceBundler::Dsl::Concern
 
     def initialize(params={})
       @params = params
@@ -28,7 +27,7 @@ class TerraspaceBundler::Mod
       if registry?
         @source
       else
-        @source.include?('/') ? @source : "#{dsl.global[:org]}/#{@source}"
+        @source.include?('/') ? @source : "#{TB.config.org}/#{@source}"
       end
     end
 

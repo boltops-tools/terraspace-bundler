@@ -24,5 +24,10 @@ class TerraspaceBundler::Mod
     def stage_path(name)
       "#{stage_root}/#{name}"
     end
+
+    def mod_path
+      export_to = @mod.export_to || TB.config.export_to
+      "#{export_to}/#{@mod.name}"
+    end
   end
 end

@@ -1,5 +1,5 @@
 module TerraspaceBundler
-  class Installer < CLI::Base
+  class Runner < CLI::Base
     def run
       Syncer.new(@options).run
       Exporter.new(@options).run
@@ -8,10 +8,10 @@ module TerraspaceBundler
 
     def finish_message
       no_modules_found = true
-      export_paths.each do |export_path|
-        found = Dir.exist?(export_path) && !Dir.empty?(export_path)
+      export_paths.each do |path|
+        found = Dir.exist?(path) && !Dir.empty?(path)
         next unless found
-        logger.info  "Modules saved to #{export_path}"
+        logger.info  "Modules saved to #{path}"
         no_modules_found = false
       end
 
@@ -20,7 +20,7 @@ module TerraspaceBundler
 
     def export_paths
       export_paths = Terrafile.instance.mods.map(&:export_to).compact.uniq
-      export_paths << TB.config.export_path
+      export_paths << TB.config.export_to
       export_paths
     end
   end

@@ -19,7 +19,7 @@ class TerraspaceBundler::Lockfile
     def item(mod)
       props = mod.props.dup # passthrough: name, url, version, ref, tag, branch etc
       props.delete(:name) # different structure in Terrafile.lock YAML
-      props[:sha] = mod.sha
+      props[:sha] ||= mod.latest_sha
       props.delete_if { |k,v| v.nil? }
       { mod.name => props }
     end
