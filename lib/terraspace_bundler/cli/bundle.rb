@@ -27,6 +27,7 @@ class TerraspaceBundler::CLI
 
     desc "purge_cache", "Purge cache."
     long_desc Help.text("bundle/purge_cache")
+    option :yes, aliases: :y, type: :boolean, desc: "bypass are you sure prompt"
     def purge_cache
       PurgeCache.new(options).run
     end
