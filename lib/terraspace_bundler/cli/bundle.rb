@@ -27,6 +27,7 @@ class TerraspaceBundler::CLI
 
     desc "purge_cache", "Purge cache."
     long_desc Help.text("bundle/purge_cache")
+    option :yes, aliases: :y, type: :boolean, desc: "bypass are you sure prompt"
     def purge_cache
       PurgeCache.new(options).run
     end
@@ -35,6 +36,7 @@ class TerraspaceBundler::CLI
     long_desc Help.text("bundle/update")
     terrafile_option.call
     def update(*mods)
+      TB.update_mode = true
       TB::Runner.new(options.merge(mods: mods, mode: "update")).run
     end
   end

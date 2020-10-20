@@ -40,7 +40,7 @@ class TerraspaceBundler::Lockfile
       # Only check when set.
       # Also in update mode then always check it.
       @changed = @current.sha && !@locked.sha.include?(@current.sha) ||
-                 update_mode? && !@current.latest_sha.include?(@locked.sha)
+                 TB.update_mode? && !@current.latest_sha.include?(@locked.sha)
       if @changed
         @reason = reason_message("sha")
         return @changed
@@ -52,11 +52,5 @@ class TerraspaceBundler::Lockfile
     def reason_message(version)
       "Replacing mod #{@current.name} because #{version} is different in Terrafile and Terrafile.lock"
     end
-
-    def update_mode?
-      self.class.update_mode
-    end
-
-    class_attribute :update_mode
   end
 end
