@@ -3,6 +3,11 @@
 All notable changes to this project will be documented in this file.
 This project *loosely tries* to adhere to [Semantic Versioning](http://semver.org/), even before v1.0.
 
+## [0.3.2]
+- #4 only purge and export explicit mods
+- are you sure prompt for purge_cache
+- clean up update mode
+
 ## [0.3.1]
 - #3 all_stacks: only consider dirs
 
