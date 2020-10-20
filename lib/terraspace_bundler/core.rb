@@ -22,5 +22,15 @@ module TerraspaceBundler
       dsl
     end
     memoize :dsl
+
+    @@update_mode = false
+    def update_mode
+      @@update_mode
+    end
+    alias_method :update_mode?, :update_mode
+
+    def update_mode=(v)
+      @@update_mode = v
+    end
   end
 end

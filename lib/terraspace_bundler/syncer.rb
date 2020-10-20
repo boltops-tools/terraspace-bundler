@@ -31,7 +31,6 @@ module TerraspaceBundler
 
     def sync_mods
       # VersionComparer is used in lockfile.sync and does heavy lifting to check if mod should be updated and replaced
-      TB::Lockfile::VersionComparer.update_mode = @options[:mode] == "update"
       terrafile.mods.each do |mod|
         next unless sync?(mod)
         logger.debug "Syncing #{mod.name}"
