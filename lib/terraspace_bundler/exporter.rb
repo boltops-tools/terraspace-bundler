@@ -1,5 +1,6 @@
 module TerraspaceBundler
   class Exporter
+    include TB::Mod::PathConcern
     include TB::Util::Logging
 
     def initialize(options={})
@@ -7,11 +8,20 @@ module TerraspaceBundler
     end
 
     def run
-      purge
-      lockfile.mods.each do |mod|
+      purge_all
+      mods.each do |mod|
         logger.info "Exporting #{mod.name}"
+        purge(mod)
         export(mod)
       end
+    end
+
+    def mods
+      mods = lockfile.mods
+      if TB.update_mode? && !@options[:mods].empty?
+        mods.select! { |mod| @options[:mods].include?(mod.name) }
+      end
+      mods
     end
 
     def export(mod)
@@ -25,9 +35,15 @@ module TerraspaceBundler
     end
 
   private
-    def purge
+    def purge_all
+      return if TB.update_mode?
       return unless TB.config.export_purge
       FileUtils.rm_rf(TB.config.export_to)
+    end
+
+    def purge(mod)
+      mod_path = get_mod_path(mod)
+      FileUtils.rm_rf(mod_path)
     end
 
     def lockfile

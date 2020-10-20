@@ -26,8 +26,12 @@ class TerraspaceBundler::Mod
     end
 
     def mod_path
-      export_to = @mod.export_to || TB.config.export_to
-      "#{export_to}/#{@mod.name}"
+      get_mod_path(@mod)
+    end
+
+    def get_mod_path(mod)
+      export_to = mod.export_to || TB.config.export_to
+      "#{export_to}/#{mod.name}"
     end
   end
 end
