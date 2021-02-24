@@ -35,7 +35,20 @@ class TerraspaceBundler::Mod
       if registry?
         registry.github_url
       else
-        "#{TB.config.base_clone_url}#{source}" # Note: make sure to not use @source, is org may no be added
+        git_source_url
+      end
+    end
+
+    def git_source_url
+      if @source.include?('http') || @source.include?(':')
+        # Examples:
+        #   mod "pet", source: "https://github.com/tongueroo/pet"
+        #   mod "pet", source: "git@github.com:tongueroo/pet"
+        @source
+      else
+        # Examples:
+        #   mod "pet", source: "tongueroo/pet"
+        "#{TB.config.base_clone_url}#{source}" # Note: make sure to not use @source, org may not be added
       end
     end
 
