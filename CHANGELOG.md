@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 This project *loosely tries* to adhere to [Semantic Versioning](http://semver.org/), even before v1.0.
 
+## [0.3.3] - 2021-02-24
+- [#8](https://github.com/boltops-tools/terraspace-bundler/pull/8) fix https sources
+- [#9](https://github.com/boltops-tools/terraspace-bundler/pull/9) Git checkout retry with v
+
 ## [0.3.2]
 - #4 only purge and export explicit mods
 - are you sure prompt for purge_cache
