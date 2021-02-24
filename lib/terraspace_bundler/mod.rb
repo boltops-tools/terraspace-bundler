@@ -23,8 +23,11 @@ module TerraspaceBundler
       url_words[-1]
     end
 
+    # https://github.com/tongueroo/pet - 2nd to last word
+    # git@github.com:tongueroo/pet - 2nd to last word without chars before :
     def org
-      url_words[-2] # second to last word
+      s = url_words[-2] # second to last word
+      s.split(':').last # in case of git@github.com:tongueroo/pet form
     end
 
     def full_repo
