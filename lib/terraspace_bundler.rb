@@ -7,6 +7,7 @@ require "dsl_evaluator"
 require "fileutils"
 require "memoist"
 require "rainbow/ext/string"
+require "singleton"
 require "terraspace_bundler/version"
 require "yaml"
 
