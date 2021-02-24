@@ -51,7 +51,7 @@ module TerraspaceBundler
     end
 
     def update_all?
-      @options[:mode] == "update" && @options[:mods].empty?
+      TB.update_mode? && @options[:mods].empty?
     end
 
     def subtract(mods1, mods2)

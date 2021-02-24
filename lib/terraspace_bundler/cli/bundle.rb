@@ -37,7 +37,7 @@ class TerraspaceBundler::CLI
     terrafile_option.call
     def update(*mods)
       TB.update_mode = true
-      TB::Runner.new(options.merge(mods: mods, mode: "update")).run
+      TB::Runner.new(options.merge(mods: mods)).run
     end
   end
 end
