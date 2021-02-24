@@ -12,10 +12,9 @@ module TerraspaceBundler
       @version, @ref, @tag, @branch = @props[:version], @props[:ref], @props[:tag], @props[:branch]
     end
 
+    # support variety of options, prefer version
     def checkout_version
-      v = detected_version
-      v = "v#{v}" if type == "registry" && @version && !v.starts_with?("v")
-      v
+      @version || @ref || @tag || @branch
     end
 
     # use url instead of source because for registry modules, the repo name is different
@@ -41,11 +40,6 @@ module TerraspaceBundler
     end
 
   private
-    # support variety of options, prefer version
-    def detected_version
-      @version || @ref || @tag || @branch
-    end
-
     def url_words
       url.split('/')
     end

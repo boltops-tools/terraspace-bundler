@@ -21,10 +21,16 @@ module TerraspaceBundler::Util
     def git(command)
       sh("git #{command}")
     rescue TB::GitError => e
-      logger.error "ERROR: There was a git error".color(:red)
-      logger.error "Current dir: #{Dir.pwd}"
-      logger.error "The error occur when running:"
-      logger.error e.message
+      action, version = command.split(' ')
+      if action == "checkout" && version !~ /^v/
+        command = "checkout v#{version}"
+        retry
+      else
+        logger.error "ERROR: There was a git error".color(:red)
+        logger.error "Current dir: #{Dir.pwd}"
+        logger.error "The error occur when running:"
+        logger.error e.message
+      end
       exit 1
     end
   end
