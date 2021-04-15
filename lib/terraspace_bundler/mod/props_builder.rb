@@ -44,6 +44,7 @@ class TerraspaceBundler::Mod
         # Examples:
         #   mod "pet", source: "https://github.com/tongueroo/pet"
         #   mod "pet", source: "git@github.com:tongueroo/pet"
+        #   mod "pet", source: "git@gitlab.com:foo/tongueroo/pet"
         @source
       else
         # Examples:
@@ -58,7 +59,7 @@ class TerraspaceBundler::Mod
     end
 
     def registry?
-      !@source.nil? && @source.split('/').size == 3
+      !@source.nil? && !@source.include?(':') && @source.split('/').size == 3
     end
 
     def registry
