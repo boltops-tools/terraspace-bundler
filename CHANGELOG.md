@@ -3,6 +3,9 @@
 All notable changes to this project will be documented in this file.
 This project *loosely tries* to adhere to [Semantic Versioning](http://semver.org/), even before v1.0.
 
+## [0.3.4] - 2021-04-15
+- [#11](https://github.com/boltops-tools/terraspace-bundler/pull/11) improve registry dectection and gitlab repository support
+
 ## [0.3.3] - 2021-02-24
 - [#8](https://github.com/boltops-tools/terraspace-bundler/pull/8) fix https sources
 - [#9](https://github.com/boltops-tools/terraspace-bundler/pull/9) Git checkout retry with v
