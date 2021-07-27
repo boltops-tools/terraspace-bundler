@@ -4,6 +4,8 @@ class TerraspaceBundler::Mod
   class Props
     extend Memoist
 
+    delegate :type, :registry?, to: :typer
+
     attr_reader :source
     def initialize(params={})
       @params = params
@@ -26,7 +28,7 @@ class TerraspaceBundler::Mod
 
     # do not use the name source. @options is a copy though
     def normalized_source
-      if typer.registry?
+      if registry?
         @source
       else
         @source.include?('/') ? @source : "#{TB.config.org}/#{@source}"
@@ -34,7 +36,7 @@ class TerraspaceBundler::Mod
     end
 
     def url
-      if typer.registry?
+      if registry?
         registry.github_url
       else
         git_source_url
@@ -60,10 +62,6 @@ class TerraspaceBundler::Mod
       Typer.new(self)
     end
     memoize :typer
-
-    def type
-      typer.detect
-    end
 
     def registry
       Registry.new(@source, @version)
