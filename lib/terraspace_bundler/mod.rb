@@ -19,7 +19,7 @@ module TerraspaceBundler
 
     # use url instead of source because for registry modules, the repo name is different
     def repo
-      url_words[-1]
+      url_words[-1].sub(/\.git$/,'')
     end
 
     # https://github.com/tongueroo/pet - 2nd to last word
