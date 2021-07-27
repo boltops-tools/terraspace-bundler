@@ -15,6 +15,7 @@ class TerraspaceBundler::Mod
       org_path = "#{cache_root}/#{@mod.org}"
       FileUtils.mkdir_p(org_path)
 
+      puts "org_path #{org_path}"
       Dir.chdir(org_path) do
         clone unless File.exist?(@mod.repo)
 

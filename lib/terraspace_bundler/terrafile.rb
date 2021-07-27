@@ -17,7 +17,7 @@ module TerraspaceBundler
     memoize :mods
 
     def new_mod(params)
-      props = Mod::PropsBuilder.new(params).build
+      props = Mod::Props.new(params).build
       Mod.new(props)
     end
 

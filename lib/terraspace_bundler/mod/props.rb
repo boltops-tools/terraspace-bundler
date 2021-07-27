@@ -1,9 +1,10 @@
 # Use to build mod from Terrafile entry.
 # The Terrafile.lock does not need this because it's simple and just merges the data.
 class TerraspaceBundler::Mod
-  class PropsBuilder
+  class Props
     extend Memoist
 
+    attr_reader :source
     def initialize(params={})
       @params = params
       @options = params[:options]
@@ -13,7 +14,7 @@ class TerraspaceBundler::Mod
     def build
       @options.merge(
         name: name,
-        source: source, # overwrite source. @options is a copy though
+        source: normalized_source,
         type: type,
         url: url,
       )
@@ -23,8 +24,9 @@ class TerraspaceBundler::Mod
       @params[:args].first
     end
 
-    def source
-      if registry?
+    # do not use the name source. @options is a copy though
+    def normalized_source
+      if typer.registry?
         @source
       else
         @source.include?('/') ? @source : "#{TB.config.org}/#{@source}"
@@ -32,7 +34,7 @@ class TerraspaceBundler::Mod
     end
 
     def url
-      if registry?
+      if typer.registry?
         registry.github_url
       else
         git_source_url
@@ -54,12 +56,13 @@ class TerraspaceBundler::Mod
     end
 
     # IE: git or registry
-    def type
-      registry? ? "registry" : "git"
+    def typer
+      Typer.new(self)
     end
+    memoize :typer
 
-    def registry?
-      !@source.nil? && !@source.include?(':') && @source.split('/').size == 3
+    def type
+      typer.detect
     end
 
     def registry
