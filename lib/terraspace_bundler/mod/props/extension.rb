@@ -1,5 +1,5 @@
-class TerraspaceBundler::Mod
-  module PropsExtension
+class TerraspaceBundler::Mod::Props
+  module Extension
     def props(*names)
       names.each { |n| prop(n) }
     end

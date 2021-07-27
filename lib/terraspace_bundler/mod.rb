@@ -1,6 +1,6 @@
 module TerraspaceBundler
   class Mod
-    extend PropsExtension
+    extend Props::Extension
     props :export_to, :name, :sha, :source, :subfolder, :type, :url
 
     include StackConcern
