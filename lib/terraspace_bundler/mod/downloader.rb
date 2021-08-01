@@ -15,11 +15,12 @@ class TerraspaceBundler::Mod
       org_path = "#{cache_root}/#{@mod.org}"
       FileUtils.mkdir_p(org_path)
 
-      puts "org_path #{org_path}"
       Dir.chdir(org_path) do
+        logger.debug "Current root dir: #{org_path}"
         clone unless File.exist?(@mod.repo)
 
         Dir.chdir(@mod.repo) do
+          logger.debug "Change dir: #{@mod.repo}"
           git "pull"
           git "submodule update --init"
           stage
@@ -57,7 +58,7 @@ class TerraspaceBundler::Mod
 
     def switch_version(version)
       stage_path = stage_path("#{@mod.org}/#{@mod.repo}")
-      logger.debug "Within: #{stage_path}"
+      # logger.debug "Within: #{stage_path}"
       Dir.chdir(stage_path) do
         git "checkout #{version}"
         @sha = git("rev-parse HEAD").strip
