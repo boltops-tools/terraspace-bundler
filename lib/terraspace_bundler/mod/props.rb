@@ -14,11 +14,21 @@ class TerraspaceBundler::Mod
     end
 
     def build
-      @options.merge(
+      o = @options.merge(
         name: name,
         type: type,
         url: url,
       )
+      subfolder = subfolder_slash_notation(@source)
+      o[:subfolder] ||= subfolder
+      o
+    end
+
+    def subfolder_slash_notation(source)
+      parts = source.split('//')
+      unless parts.size == 2 && source.include?('http')
+        parts.last
+      end
     end
 
     def name
@@ -28,7 +38,20 @@ class TerraspaceBundler::Mod
     # url is normalized
     def url
       url = type == 'registry' ? registry.github_url : git_source_url
-      clone_with(url)
+      remove_subfolder_notation(clone_with(url))
+    end
+
+    def source_without_subfolder
+      remove_subfolder_notation(@source)
+    end
+
+    def remove_subfolder_notation(source)
+      parts = source.split('//')
+      if parts.size == 2 && source.include?('http')
+        source
+      else
+        parts[0..-2].join('//')
+      end
     end
 
     # apply clone_with option if set
