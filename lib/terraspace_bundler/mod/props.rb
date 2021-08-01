@@ -25,9 +25,9 @@ class TerraspaceBundler::Mod
       @params[:args].first
     end
 
-    # Main thing: normalized_source adds inferred org.
+    # Main thing: org_source adds inferred org.
     # Registry git sources already normalized.
-    def normalized_source
+    def org_source
       if registry?
         @source # already normalized (includes org)
       else
@@ -56,7 +56,7 @@ class TerraspaceBundler::Mod
       else
         # Examples:
         #   mod "pet", source: "tongueroo/pet"
-        "#{TB.config.base_clone_url}#{normalized_source}" # Note: make sure to not use @source, org may not be added
+        "#{TB.config.base_clone_url}#{org_source}" # Note: make sure to not use @source, org may not be added
       end
     end
 
