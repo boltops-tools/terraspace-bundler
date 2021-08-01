@@ -26,12 +26,13 @@ class TerraspaceBundler::Mod
       @params[:args].first
     end
 
-    # do not use the name source. @options is a copy though
+    # Main thing: normalized_source adds inferred org.
+    # Registry git sources already normalized.
     def normalized_source
-      source = if registry?
-        @source
+      if registry?
+        @source # already normalized (includes org)
       else
-        @source.include?('/') ? @source : "#{TB.config.org}/#{@source}"
+        @source.include?('/') ? @source : "#{TB.config.org}/#{@source}" # adds inferred org
       end
     end
 
