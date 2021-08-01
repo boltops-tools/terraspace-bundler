@@ -4,7 +4,7 @@ class TerraspaceBundler::Mod
   class Props
     extend Memoist
 
-    delegate :type, :registry?, to: :typer
+    delegate :type, to: :typer
 
     attr_reader :source
     def initialize(params={})
@@ -27,7 +27,7 @@ class TerraspaceBundler::Mod
 
     # url is normalized
     def url
-      url = registry? ? registry.github_url : git_source_url
+      url = type == 'registry' ? registry.github_url : git_source_url
       clone_with(url)
     end
 

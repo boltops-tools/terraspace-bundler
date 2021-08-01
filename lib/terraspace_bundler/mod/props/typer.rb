@@ -20,6 +20,8 @@ class TerraspaceBundler::Mod::Props
       end
     end
 
+  private
+    # dont use registry? externally. instead use type since it can miss local detection
     def registry?
       !source.nil? && !source.include?(':') &&
       (source.split('/').size == 3 || source.split('/').size == 4)
