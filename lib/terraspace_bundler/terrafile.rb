@@ -26,13 +26,13 @@ module TerraspaceBundler
     # When a source is set with an inferred org and org is not set it looks like this:
     #
     #     dsl.meta has {:source=>"terraform-random-pet"}
-    #     mod.source is /terraform-random-pet
+    #     mod.source = "terraform-random-pet"
     #
     # Using info to detect that the org is missing and the Terrafile definition
     # has at least one mod line that has an inferred org.
     #
     def missing_org?
-      !!mods.detect { |mod| mod.normalized_source.starts_with?('/') }
+      mods.detect { |mod| mod.source.split('/').size == 1 } && TB.config.org.nil?
     end
   end
 end

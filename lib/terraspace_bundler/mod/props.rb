@@ -16,7 +16,6 @@ class TerraspaceBundler::Mod
     def build
       @options.merge(
         name: name,
-        normalized_source: normalized_source,
         type: type,
         url: url,
       )
