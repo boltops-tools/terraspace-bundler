@@ -28,7 +28,7 @@ class TerraspaceBundler::Mod
 
     # do not use the name source. @options is a copy though
     def normalized_source
-      if registry?
+      source = if registry?
         @source
       else
         @source.include?('/') ? @source : "#{TB.config.org}/#{@source}"
@@ -36,11 +36,14 @@ class TerraspaceBundler::Mod
     end
 
     def url
-      if registry?
+      url = if registry?
         registry.github_url
       else
         git_source_url
       end
+      # sub to allow for generic git repo notiation
+      #   IE: git::https://example.com/example-module.git
+      url.sub('git::','')
     end
 
     def git_source_url

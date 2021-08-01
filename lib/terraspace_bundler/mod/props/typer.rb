@@ -13,9 +13,8 @@ class TerraspaceBundler::Mod::Props
     end
 
     def registry?
-      # puts "source: #{source}".color(:yellow)
       !source.nil? && !source.include?(':') &&
-      source.split('/').size == 3 || source.split('/').size == 4
+      (source.split('/').size == 3 || source.split('/').size == 4)
     end
   end
 end
