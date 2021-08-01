@@ -1,0 +1,15 @@
+# terraform registry public example
+mod "sg", source: "terraform-aws-modules/security-group/aws"
+# private terraform registry example
+mod "webapp", source: "app.terraform.io/demo-qa/s3-webapp/aws"
+
+# github, gitlab, bitbucket examples
+mod "example1", source: "git@bitbucket.org:tongueroo/example-module.git"
+mod "example2", source: "git@gitlab.com:tongueroo/example-module"
+mod "pet1", source: "tongueroo/pet" # inferred org
+mod "pet2", source: "https://github.com/tongueroo/pet"
+org "tongueroo"
+mod "pet3", source: "pet" # inferred org
+
+# Note: Must hack the download.rb clone to hardcode a downloaded repo to mimic a generic repo source
+# mod "example3", source: "git::https://example.com/example-module.git"

@@ -21,6 +21,10 @@ class TerraspaceBundler::Dsl
       config.stack_options.merge!(value)
     end
 
+    def clone_with(value)
+      config.clone_with = value
+    end
+
     def config
       TB.config
     end

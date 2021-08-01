@@ -26,6 +26,7 @@ class TerraspaceBundler::Lockfile
 
       # Most props are "strict" version checks. So if user changes options generally in the mod line
       # the Terrafile.lock will get updated, which is expected behavior.
+
       props = @locked.props.keys + @current.props.keys
       strict_versions = props.uniq.sort - [:sha]
       strict_versions.each do |version|

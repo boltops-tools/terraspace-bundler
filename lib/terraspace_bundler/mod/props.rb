@@ -27,7 +27,19 @@ class TerraspaceBundler::Mod
 
     # url is normalized
     def url
-      registry? ? registry.github_url : git_source_url
+      url = registry? ? registry.github_url : git_source_url
+      clone_with(url)
+    end
+
+    # apply clone_with option if set
+    def clone_with(url)
+      with = @options[:clone_with] || TB.config.clone_with
+      return url unless with
+      if with == 'https'
+        url.sub(/.*@(.*):/,'https://\1/')
+      else # git@
+        url.sub(%r{http[s]?://(.*?)/},'git@\1:')
+      end
     end
 
     # git_source_url is normalized
