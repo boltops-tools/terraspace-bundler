@@ -53,7 +53,7 @@ class TerraspaceBundler::Mod
       else
         # Examples:
         #   mod "pet", source: "tongueroo/pet"
-        "#{TB.config.base_clone_url}#{source}" # Note: make sure to not use @source, org may not be added
+        "#{TB.config.base_clone_url}#{normalized_source}" # Note: make sure to not use @source, org may not be added
       end
     end
 
