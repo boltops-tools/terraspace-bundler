@@ -16,7 +16,7 @@ class TerraspaceBundler::Mod
     def build
       @options.merge(
         name: name,
-        source: normalized_source,
+        normalized_source: normalized_source,
         type: type,
         url: url,
       )
@@ -57,7 +57,6 @@ class TerraspaceBundler::Mod
       end
     end
 
-    # IE: git or registry
     def typer
       Typer.new(self)
     end

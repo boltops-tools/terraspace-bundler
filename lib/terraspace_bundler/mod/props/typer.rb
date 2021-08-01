@@ -7,13 +7,15 @@ class TerraspaceBundler::Mod::Props
       @props = props # Props.new object
     end
 
+    # IE: git or registry
     def type
       registry? ? "registry" : "git"
     end
 
     def registry?
-      !source.nil? && !source.include?(':') && source.split('/').size == 3
+      # puts "source: #{source}".color(:yellow)
+      !source.nil? && !source.include?(':') &&
+      source.split('/').size == 3 || source.split('/').size == 4
     end
   end
 end
-

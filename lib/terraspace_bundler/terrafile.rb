@@ -32,7 +32,7 @@ module TerraspaceBundler
     # has at least one mod line that has an inferred org.
     #
     def missing_org?
-      !!mods.detect { |mod| mod.source.starts_with?('/') }
+      !!mods.detect { |mod| mod.normalized_source.starts_with?('/') }
     end
   end
 end
