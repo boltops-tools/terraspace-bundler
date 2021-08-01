@@ -1,5 +1,7 @@
 class TerraspaceBundler::Mod::Props
   class Typer
+    include TerraspaceBundler::Mod::LocalConcern
+
     delegate :source, to: :props
 
     attr_reader :props
@@ -9,7 +11,13 @@ class TerraspaceBundler::Mod::Props
 
     # IE: git or registry
     def type
-      registry? ? "registry" : "git"
+      if local?
+        "local"
+      elsif registry?
+        "registry"
+      else
+        "git"
+      end
     end
 
     def registry?

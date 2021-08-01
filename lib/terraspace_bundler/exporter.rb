@@ -25,9 +25,9 @@ module TerraspaceBundler
     end
 
     def export(mod)
-      downloader = Mod::Downloader.new(mod)
-      downloader.run
-      downloader.switch_version(mod.sha)
+      fetcher = Mod::Fetcher.new(mod).instance
+      fetcher.run
+      fetcher.switch_version(mod.sha)
       copy = Copy.new(mod)
       copy.mod
       copy.stacks

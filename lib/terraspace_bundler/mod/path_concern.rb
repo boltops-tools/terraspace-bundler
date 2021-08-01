@@ -18,11 +18,15 @@ class TerraspaceBundler::Mod
     end
 
     def cache_path(name)
-      "#{cache_root}/#{@mod.vcs_provider}/#{name}"
+      "#{cache_root}/#{parent_folder}/#{name}"
     end
 
     def stage_path(name)
-      "#{stage_root}/#{@mod.vcs_provider}/#{name}"
+      "#{stage_root}/#{parent_folder}/#{name}"
+    end
+
+    def parent_folder
+      @mod.local? ? "local" : @mod.vcs_provider
     end
 
     def mod_path

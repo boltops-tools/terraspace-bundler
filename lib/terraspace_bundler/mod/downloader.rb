@@ -1,14 +1,6 @@
 class TerraspaceBundler::Mod
-  class Downloader
+  class Downloader < Fetcher
     extend Memoist
-    include TB::Util::Git
-    include TB::Util::Logging
-    include TB::Mod::PathConcern
-
-    attr_reader :sha
-    def initialize(mod)
-      @mod = mod
-    end
 
     def run
       setup_tmp
@@ -57,7 +49,7 @@ class TerraspaceBundler::Mod
     end
 
     def switch_version(version)
-      stage_path = stage_path("#{@mod.org}/#{@mod.repo}")
+      stage_path = stage_path("#{@mod.copy_source_path}")
       # logger.debug "Within: #{stage_path}"
       Dir.chdir(stage_path) do
         git "checkout #{version}"
@@ -66,8 +58,8 @@ class TerraspaceBundler::Mod
     end
 
     def copy_to_stage
-      cache_path = cache_path("#{@mod.org}/#{@mod.repo}")
-      stage_path = stage_path("#{@mod.org}/#{@mod.repo}")
+      cache_path = cache_path("#{@mod.copy_source_path}")
+      stage_path = stage_path("#{@mod.copy_source_path}")
       FileUtils.rm_rf(stage_path)
       FileUtils.mkdir_p(File.dirname(stage_path))
       FileUtils.cp_r(cache_path, stage_path)

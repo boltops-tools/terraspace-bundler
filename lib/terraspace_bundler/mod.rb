@@ -4,6 +4,7 @@ module TerraspaceBundler
     props :export_to, :name, :sha, :source, :subfolder, :type, :url, :clone_with
 
     include StackConcern
+    include LocalConcern
 
     attr_reader :props, :version, :ref, :tag, :branch
     def initialize(props={})
@@ -34,9 +35,9 @@ module TerraspaceBundler
     end
 
     def latest_sha
-      downloader = Downloader.new(self)
-      downloader.run
-      downloader.sha
+      fetcher = Fetcher.new(self).instance
+      fetcher.run
+      fetcher.sha
     end
 
     def vcs_provider
@@ -47,6 +48,12 @@ module TerraspaceBundler
         # "git@github.com:org/repo"      => github.com
         url.match(%r{git@(.*?):})[1]
       end
+    end
+
+    # Fetcher: Downloader/Local copies to a slightly different folder.
+    # Also, Copy will use this and reference same method so it's consistent.
+    def copy_source_path
+      local? ? name : full_repo
     end
 
   private
