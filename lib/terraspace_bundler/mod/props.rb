@@ -25,38 +25,31 @@ class TerraspaceBundler::Mod
       @params[:args].first
     end
 
-    # Main thing: org_source adds inferred org.
-    # Registry git sources already normalized.
-    def org_source
-      if registry?
-        @source # already normalized (includes org)
-      else
-        @source.include?('/') ? @source : "#{TB.config.org}/#{@source}" # adds inferred org
-      end
-    end
-
+    # url is normalized
     def url
-      url = if registry?
-        registry.github_url
-      else
-        git_source_url
-      end
-      # sub to allow for generic git repo notiation
-      #   IE: git::https://example.com/example-module.git
-      url.sub('git::','')
+      registry? ? registry.github_url : git_source_url
     end
 
+    # git_source_url is normalized
     def git_source_url
       if @source.include?('http') || @source.include?(':')
         # Examples:
-        #   mod "pet", source: "https://github.com/tongueroo/pet"
-        #   mod "pet", source: "git@github.com:tongueroo/pet"
-        #   mod "pet", source: "git@gitlab.com:foo/tongueroo/pet"
-        @source
+        #   mod "pet1", source: "https://github.com/tongueroo/pet"
+        #   mod "pet2", source: "git@github.com:tongueroo/pet"
+        #   mod "pet3", source: "git@gitlab.com:tongueroo/pet"
+        #   mod "pet4", source: "git@bitbucket.org:tongueroo/pet"
+        #   mod "example3", source: "git::https://example.com/example-module.git"
+        #
+        # sub to allow for generic git repo notiation
+        @source.sub('git::','')
       else
         # Examples:
         #   mod "pet", source: "tongueroo/pet"
-        "#{TB.config.base_clone_url}#{org_source}" # Note: make sure to not use @source, org may not be added
+        # Or:
+        #   org "tongueroo"
+        #   mod "pet", source: "pet"
+        org_source = @source.include?('/') ? @source : "#{TB.config.org}/#{@source}" # adds inferred org
+        "#{TB.config.base_clone_url}#{org_source}"
       end
     end
 
