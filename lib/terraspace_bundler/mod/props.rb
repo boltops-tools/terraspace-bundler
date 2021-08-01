@@ -1,3 +1,5 @@
+require 'uri'
+
 # Use to build mod from Terrafile entry.
 # The Terrafile.lock does not need this because it's simple and just merges the data.
 class TerraspaceBundler::Mod
@@ -19,26 +21,47 @@ class TerraspaceBundler::Mod
         type: type,
         url: url,
       )
-      subfolder = subfolder_slash_notation(@source)
-      o[:subfolder] ||= subfolder
+      o[:subfolder] ||= subfolder_slash_notation(@source)
+      o[:ref] ||= ref_slash_notation(@source)
       o
     end
 
     def subfolder_slash_notation(source)
       parts = source.split('//')
-      unless parts.size == 2 && source.include?('http')
+      unless parts.size == 1 || parts.size == 2 && source.include?('http')
         parts.last
       end
     end
 
+    def ref_slash_notation(source)
+      source = "tongueroo/example-module//subfolder?ref=92cafe7fca2a90d8de2245f3a0a9a47002bd0b95"
+      uri = URI(source)
+      params = URI::decode_www_form(uri.query).to_h # if you are in 2.1 or later version of Ruby
+      params['ref']
+    end
+
     def name
-      @params[:args].first
+      remove_special_notations(@params[:args].first)
     end
 
     # url is normalized
     def url
       url = type == 'registry' ? registry.github_url : git_source_url
-      remove_subfolder_notation(clone_with(url))
+      remove_special_notations(clone_with(url))
+    end
+
+    def remove_special_notations(source)
+      # puts "remove_special_notations:"
+      x = remove_ref_notation(source)
+      y = remove_subfolder_notation(x)
+      # puts "source: #{source}"
+      # puts "x #{x}"
+      # puts "y #{y}"
+      y
+    end
+
+    def remove_ref_notation(source)
+      source.sub(/\?.*/,'')
     end
 
     def source_without_subfolder
@@ -47,7 +70,8 @@ class TerraspaceBundler::Mod
 
     def remove_subfolder_notation(source)
       parts = source.split('//')
-      if parts.size == 2 && source.include?('http')
+      # puts "parts #{parts}"
+      if parts.size == 1 || parts.size == 2 && source.include?('http')
         source
       else
         parts[0..-2].join('//')

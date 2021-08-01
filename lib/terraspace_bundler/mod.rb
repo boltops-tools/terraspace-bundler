@@ -26,6 +26,8 @@ module TerraspaceBundler
     # https://github.com/tongueroo/pet - 2nd to last word
     # git@github.com:tongueroo/pet - 2nd to last word without chars before :
     def org
+      # puts "url_words #{url_words}"
+      # pp url_words
       s = url_words[-2] # second to last word
       s.split(':').last # in case of git@github.com:tongueroo/pet form
     end
@@ -53,6 +55,8 @@ module TerraspaceBundler
     # Fetcher: Downloader/Local copies to a slightly different folder.
     # Also, Copy will use this and reference same method so it's consistent.
     def copy_source_path
+      puts "copy_source_path local? #{local?}"
+      puts "copy_source_path full_repo #{full_repo}"
       local? ? name : full_repo
     end
 
