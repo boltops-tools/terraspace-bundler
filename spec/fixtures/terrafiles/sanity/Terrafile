@@ -1,9 +1,14 @@
 # terraform registry public example
 mod "sg", source: "terraform-aws-modules/security-group/aws"
 # private terraform registry example
-mod "webapp", source: "app.terraform.io/demo-qa/s3-webapp/aws"
+# clone_with "https"
+mod "webapp", source: "app.terraform.io/demo-qa/s3-webapp/aws" #, clone_with: "https"
 
-# github, gitlab, bitbucket examples
+mod "local1", source: "/home/ec2-user/environment/downloads/example-module"
+mod "local2", source: "./example-module"
+mod "local3", source: "~/environment/infra-terrafile/example-module"
+
+# # github, gitlab, bitbucket examples
 mod "example1", source: "git@bitbucket.org:tongueroo/example-module.git"
 mod "example2", source: "git@gitlab.com:tongueroo/example-module"
 mod "pet1", source: "tongueroo/pet" # inferred org
