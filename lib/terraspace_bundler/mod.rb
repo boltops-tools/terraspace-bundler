@@ -39,6 +39,16 @@ module TerraspaceBundler
       downloader.sha
     end
 
+    def vcs_provider
+      if url.include?('http')
+        # "https://github.com/org/repo"  => github.com
+        url.match(%r{http[s]?://(.*?)/})[1]
+      else # git@
+        # "git@github.com:org/repo"      => github.com
+        url.match(%r{git@(.*?):})[1]
+      end
+    end
+
   private
     def url_words
       url.split('/')
