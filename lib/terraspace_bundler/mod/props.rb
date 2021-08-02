@@ -1,10 +1,9 @@
-require 'uri'
-
 # Use to build mod from Terrafile entry.
 # The Terrafile.lock does not need this because it's simple and just merges the data.
 class TerraspaceBundler::Mod
   class Props
     extend Memoist
+    include NotationConcern
 
     delegate :type, to: :typer
 
@@ -26,19 +25,6 @@ class TerraspaceBundler::Mod
       o
     end
 
-    def clean(source)
-      source.sub(/.*::/,'').sub(%r{http[s?]://},'')
-    end
-
-    def ref_slash_notation(source)
-      url = clean(source).sub(%r{git@(.*?):},'') # also remove git@ notation
-      uri = URI(url)
-      if uri.query
-        params = URI::decode_www_form(uri.query).to_h # if you are in 2.1 or later version of Ruby
-        params['ref']
-      end
-    end
-
     def name
       remove_special_notations(@params[:args].first)
     end
@@ -47,40 +33,6 @@ class TerraspaceBundler::Mod
     def url
       url = type == 'registry' ? registry.github_url : git_source_url
       remove_special_notations(clone_with(url))
-    end
-
-    def remove_special_notations(source)
-      # puts "remove_special_notations:"
-      x = remove_ref_notation(source)
-      y = remove_subfolder_notation(x)
-      # puts "source: #{source}"
-      # puts "x #{x}"
-      # puts "y #{y}"
-      y
-    end
-
-    def remove_ref_notation(source)
-      source.sub(/\?.*/,'')
-    end
-
-    def source_without_subfolder
-      remove_subfolder_notation(@source)
-    end
-
-    def remove_subfolder_notation(source)
-      parts = clean(source).split('//')
-      if parts.size == 2 # has subfolder
-        parts[0..-2].join('//') # remove only subfolder
-      else
-        source
-      end
-    end
-
-    def subfolder_slash_notation(source)
-      parts = clean(source).split('//')
-      if parts.size == 2 # has subfolder
-        parts.last
-      end
     end
 
     # apply clone_with option if set

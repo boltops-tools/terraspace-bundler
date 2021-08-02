@@ -4,7 +4,7 @@ class TerraspaceBundler::Mod
 
     def run
       setup_tmp
-      org_path = cache_path("#{@mod.org}")
+      org_path = cache_path(@mod.org)
       FileUtils.mkdir_p(org_path)
 
       Dir.chdir(org_path) do
