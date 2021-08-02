@@ -49,7 +49,7 @@ class TerraspaceBundler::Mod::Fetcher
     end
 
     def switch_version(version)
-      stage_path = stage_path("#{@mod.copy_source_path}")
+      stage_path = stage_path("#{@mod.stage_relative_path}")
       # logger.debug "Within: #{stage_path}"
       Dir.chdir(stage_path) do
         git "checkout #{version}"
@@ -58,8 +58,8 @@ class TerraspaceBundler::Mod::Fetcher
     end
 
     def copy_to_stage
-      cache_path = cache_path("#{@mod.copy_source_path}")
-      stage_path = stage_path("#{@mod.copy_source_path}")
+      cache_path = cache_path("#{@mod.stage_relative_path}")
+      stage_path = stage_path("#{@mod.stage_relative_path}")
       FileUtils.rm_rf(stage_path)
       FileUtils.mkdir_p(File.dirname(stage_path))
       FileUtils.cp_r(cache_path, stage_path)

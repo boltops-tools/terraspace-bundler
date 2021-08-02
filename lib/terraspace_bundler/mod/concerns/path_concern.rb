@@ -18,14 +18,14 @@ module TerraspaceBundler::Mod::Concerns
     end
 
     def cache_path(name)
-      "#{cache_root}/#{parent_folder}/#{name}"
+      "#{cache_root}/#{parent_stage_folder}/#{name}"
     end
 
     def stage_path(name)
-      "#{stage_root}/#{parent_folder}/#{name}"
+      "#{stage_root}/#{parent_stage_folder}/#{name}"
     end
 
-    def parent_folder
+    def parent_stage_folder
       @mod.local? ? "local" : @mod.vcs_provider
     end
 

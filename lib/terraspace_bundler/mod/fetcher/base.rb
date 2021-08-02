@@ -14,5 +14,9 @@ class TerraspaceBundler::Mod::Fetcher
     def initialize(mod)
       @mod = mod
     end
+
+    def switch_version(*)
+      # noop
+    end
   end
 end

@@ -18,7 +18,7 @@ class TerraspaceBundler::Exporter
 
     # src path is from the stage area
     def src_path
-      path = stage_path(@mod.copy_source_path) # from PathConcern
+      path = stage_path(@mod.stage_relative_path)
       path = "#{path}/#{@mod.subfolder}" if @mod.subfolder
       path
     end
