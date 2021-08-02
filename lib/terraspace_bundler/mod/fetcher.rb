@@ -9,7 +9,7 @@ class TerraspaceBundler::Mod
   class Fetcher
     include TB::Util::Git
     include TB::Util::Logging
-    include TB::Mod::PathConcern
+    include TB::Mod::Concerns::PathConcern
 
     attr_reader :sha # returns nil for Local
     def initialize(mod)

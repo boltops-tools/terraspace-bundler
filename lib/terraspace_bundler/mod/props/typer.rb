@@ -1,7 +1,7 @@
 class TerraspaceBundler::Mod::Props
   class Typer
-    include TerraspaceBundler::Mod::LocalConcern
-    include TerraspaceBundler::Mod::NotationConcern
+    include TerraspaceBundler::Mod::Concerns::LocalConcern
+    include TerraspaceBundler::Mod::Concerns::NotationConcern
 
     delegate :source, to: :props
 

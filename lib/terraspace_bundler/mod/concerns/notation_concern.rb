@@ -1,6 +1,6 @@
 require 'uri'
 
-class TerraspaceBundler::Mod
+module TerraspaceBundler::Mod::Concerns
   module NotationConcern
     def remove_special_notations(source)
       remove_subfolder_notation(remove_ref_notation(source))

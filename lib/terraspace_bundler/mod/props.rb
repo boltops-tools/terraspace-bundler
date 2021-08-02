@@ -3,7 +3,7 @@
 class TerraspaceBundler::Mod
   class Props
     extend Memoist
-    include NotationConcern
+    include Concerns::NotationConcern
 
     delegate :type, to: :typer
 

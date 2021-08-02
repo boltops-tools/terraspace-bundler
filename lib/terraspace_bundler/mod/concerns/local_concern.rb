@@ -1,4 +1,4 @@
-class TerraspaceBundler::Mod
+module TerraspaceBundler::Mod::Concerns
   module LocalConcern
     def local?
       source.starts_with?("/")  ||

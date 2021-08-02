@@ -1,4 +1,4 @@
-class TerraspaceBundler::Mod
+module TerraspaceBundler::Mod::Concerns
   module PathConcern
     def setup_tmp
       FileUtils.mkdir_p(cache_root)

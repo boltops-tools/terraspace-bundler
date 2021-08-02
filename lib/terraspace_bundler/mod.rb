@@ -3,8 +3,8 @@ module TerraspaceBundler
     extend Props::Extension
     props :export_to, :name, :sha, :source, :subfolder, :type, :url, :clone_with
 
-    include StackConcern
-    include LocalConcern
+    include Concerns::StackConcern
+    include Concerns::LocalConcern
 
     attr_reader :props, :version, :ref, :tag, :branch
     def initialize(props={})

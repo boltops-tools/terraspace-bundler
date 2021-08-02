@@ -1,6 +1,6 @@
 class TerraspaceBundler::CLI
   class PurgeCache < Base
-    include TB::Mod::PathConcern
+    include TB::Mod::Concerns::PathConcern
     include TB::Util::Logging
     include TB::Util::Sure
 

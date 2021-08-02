@@ -1,6 +1,6 @@
 module TerraspaceBundler
   class Exporter
-    include TB::Mod::PathConcern
+    include TB::Mod::Concerns::PathConcern
     include TB::Util::Logging
 
     def initialize(options={})
