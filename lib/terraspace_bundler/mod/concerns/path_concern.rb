@@ -25,6 +25,21 @@ module TerraspaceBundler::Mod::Concerns
       "#{stage_root}/#{parent_stage_folder}/#{name}"
     end
 
+    # Fetcher: Downloader/Local copies to a slightly different folder.
+    # Also, Copy will use this and reference same method so it's consistent.
+    def mod_relative_path
+      x = case @mod.type
+      when 'local'
+        @mod.name
+      when -> (_) { @mod.source.include?('::') }
+        @mod.source # IE: full path that includes git:: s3:: gcs::
+      else # git, registry
+        @mod.full_repo
+      end
+      puts "mod_relative_path #{x}".color(:yellow)
+      x
+    end
+
     def parent_stage_folder
       @mod.local? ? "local" : @mod.vcs_provider
     end

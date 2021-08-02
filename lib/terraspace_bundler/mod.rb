@@ -52,21 +52,6 @@ module TerraspaceBundler
       end
     end
 
-    # Fetcher: Downloader/Local copies to a slightly different folder.
-    # Also, Copy will use this and reference same method so it's consistent.
-    def stage_relative_path
-      x = case type
-      when 'local'
-        name
-      when -> (_) { source.include?('::') }
-        source # IE: full path that includes git:: s3:: gcs::
-      else # git, registry
-        full_repo
-      end
-      puts "stage_relative_path #{x}".color(:yellow)
-      x
-    end
-
   private
     def url_words
       url.split('/')
