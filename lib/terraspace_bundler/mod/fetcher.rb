@@ -10,11 +10,9 @@ class TerraspaceBundler::Mod
     end
 
     def instance
-      if @mod.type == "local"
-        Local.new(@mod)
-      else
-        Git.new(@mod)
-      end
+      type = @mod.type == "registry" ? "git" : @mod.type
+      klass = "TerraspaceBundler::Mod::Fetcher::#{type.camelize}".constantize
+      klass.new(@mod) # IE: Local.new(@mod), Git.new(@mod), S3.new(@mod), etc
     end
   end
 end

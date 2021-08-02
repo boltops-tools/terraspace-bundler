@@ -16,6 +16,8 @@ class TerraspaceBundler::Mod::Props
         "local"
       elsif registry?
         "registry"
+      elsif source.include?('::')
+        source.split('::').first # IE: git:: s3:: gcs::
       else
         "git"
       end

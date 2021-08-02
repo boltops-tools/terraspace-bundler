@@ -1,5 +1,5 @@
 class TerraspaceBundler::Mod::Fetcher
-  class Local < Base
+  class S3 < Base
     def run
       dest = stage_path(@mod.copy_source_path)
       source = @mod.source

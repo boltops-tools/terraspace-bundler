@@ -55,7 +55,14 @@ module TerraspaceBundler
     # Fetcher: Downloader/Local copies to a slightly different folder.
     # Also, Copy will use this and reference same method so it's consistent.
     def copy_source_path
-      local? ? name : full_repo
+      case type
+      when 'local'
+        name
+      when source.include?('::')
+        source # IE: full path that includes git:: s3:: gcs::
+      else # git, registry
+        full_repo
+      end
     end
 
   private

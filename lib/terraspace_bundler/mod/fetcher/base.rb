@@ -1,3 +1,9 @@
+# Interface of subclasses should implement
+#
+#   run
+#   switch_version(mod.sha)
+#   sha
+#
 class TerraspaceBundler::Mod::Fetcher
   class Base
     include TB::Util::Git
