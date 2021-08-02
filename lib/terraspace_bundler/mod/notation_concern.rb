@@ -22,7 +22,7 @@ class TerraspaceBundler::Mod
     def subfolder_slash_notation(source)
       parts = clean_for_notation(source).split('//')
       if parts.size == 2 # has subfolder
-        parts.last
+        remove_ref_notation(parts.last)
       end
     end
 
