@@ -26,18 +26,17 @@ class TerraspaceBundler::Mod
       o
     end
 
-    def subfolder_slash_notation(source)
-      parts = source.split('//')
-      unless parts.size == 1 || parts.size == 2 && source.include?('http')
-        parts.last
-      end
+    def clean(source)
+      source.sub(/.*::/,'').sub(%r{http[s?]://},'')
     end
 
     def ref_slash_notation(source)
-      source = "tongueroo/example-module//subfolder?ref=92cafe7fca2a90d8de2245f3a0a9a47002bd0b95"
-      uri = URI(source)
-      params = URI::decode_www_form(uri.query).to_h # if you are in 2.1 or later version of Ruby
-      params['ref']
+      url = clean(source).sub(%r{git@(.*?):},'') # also remove git@ notation
+      uri = URI(url)
+      if uri.query
+        params = URI::decode_www_form(uri.query).to_h # if you are in 2.1 or later version of Ruby
+        params['ref']
+      end
     end
 
     def name
@@ -69,12 +68,18 @@ class TerraspaceBundler::Mod
     end
 
     def remove_subfolder_notation(source)
-      parts = source.split('//')
-      # puts "parts #{parts}"
-      if parts.size == 1 || parts.size == 2 && source.include?('http')
-        source
+      parts = clean(source).split('//')
+      if parts.size == 2 # has subfolder
+        parts[0..-2].join('//') # remove only subfolder
       else
-        parts[0..-2].join('//')
+        source
+      end
+    end
+
+    def subfolder_slash_notation(source)
+      parts = clean(source).split('//')
+      if parts.size == 2 # has subfolder
+        parts.last
       end
     end
 

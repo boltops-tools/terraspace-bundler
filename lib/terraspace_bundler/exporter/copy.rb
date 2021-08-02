@@ -7,7 +7,7 @@ class TerraspaceBundler::Exporter
     def mod
       FileUtils.rm_rf(mod_path)
       FileUtils.mkdir_p(File.dirname(mod_path))
-      logger.debug "cp -r #{src_path} #{mod_path}"
+      logger.debug "Copy: cp -r #{src_path} #{mod_path}".color(:yellow)
       FileUtils.cp_r(src_path, mod_path)
       FileUtils.rm_rf("#{mod_path}/.git")
     end
@@ -19,8 +19,6 @@ class TerraspaceBundler::Exporter
     # src path is from the stage area
     def src_path
       path = stage_path(@mod.copy_source_path) # from PathConcern
-      puts "src_path path #{path}".color(:yellow)
-      puts "@mod.subfolder #{@mod.subfolder}"
       path = "#{path}/#{@mod.subfolder}" if @mod.subfolder
       path
     end
