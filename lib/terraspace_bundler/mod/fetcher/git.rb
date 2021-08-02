@@ -1,5 +1,5 @@
-class TerraspaceBundler::Mod
-  class Downloader < Fetcher
+class TerraspaceBundler::Mod::Fetcher
+  class Git < Base
     extend Memoist
 
     def run

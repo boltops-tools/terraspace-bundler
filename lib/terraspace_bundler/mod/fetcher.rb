@@ -1,17 +1,10 @@
-# Fetcher is a base class to both Downloader and Local.
+# Delegates to:
 #
-# It also delegates with the instance method to Downloader and Local.
-#
-#   1. Downloader
-#   2. Local
+#   1. Local
+#   2. Git
 #
 class TerraspaceBundler::Mod
   class Fetcher
-    include TB::Util::Git
-    include TB::Util::Logging
-    include TB::Mod::Concerns::PathConcern
-
-    attr_reader :sha # returns nil for Local
     def initialize(mod)
       @mod = mod
     end
@@ -20,7 +13,7 @@ class TerraspaceBundler::Mod
       if @mod.type == "local"
         Local.new(@mod)
       else
-        Downloader.new(@mod)
+        Git.new(@mod)
       end
     end
   end

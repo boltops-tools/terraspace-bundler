@@ -4,8 +4,8 @@
 #   downloader.switch_version(mod.sha)
 #   downloader.sha
 #
-class TerraspaceBundler::Mod
-  class Local < Fetcher
+class TerraspaceBundler::Mod::Fetcher
+  class Local < Base
     def run
       dest = stage_path(@mod.copy_source_path)
       source = @mod.source
