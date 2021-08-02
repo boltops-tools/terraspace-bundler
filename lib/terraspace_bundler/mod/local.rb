@@ -9,10 +9,10 @@ class TerraspaceBundler::Mod
     def run
       dest = stage_path(@mod.copy_source_path)
       source = @mod.source
-      source.sub!(/^~/, ENV['HOME']) # allow ~/ notation
+      src = source.sub(/^~/, ENV['HOME']) # allow ~/ notation
       FileUtils.rm_rf(dest)
       FileUtils.mkdir_p(File.dirname(dest))
-      FileUtils.cp_r(source, dest)
+      FileUtils.cp_r(src, dest)
     end
 
     def switch_version(*)

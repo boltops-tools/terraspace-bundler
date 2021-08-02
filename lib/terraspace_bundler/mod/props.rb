@@ -31,7 +31,14 @@ class TerraspaceBundler::Mod
 
     # url is normalized
     def url
-      url = type == 'registry' ? registry.github_url : git_source_url
+      url = case type
+            when 'registry'
+              registry.github_url
+            when 'local'
+              source
+            else # git
+              git_source_url
+            end
       remove_special_notations(clone_with(url))
     end
 

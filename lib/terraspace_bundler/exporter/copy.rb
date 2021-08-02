@@ -7,7 +7,7 @@ class TerraspaceBundler::Exporter
     def mod
       FileUtils.rm_rf(mod_path)
       FileUtils.mkdir_p(File.dirname(mod_path))
-      logger.debug "Copy: cp -r #{src_path} #{mod_path}".color(:yellow)
+      logger.debug "Copy: cp -r #{src_path} #{mod_path}"
       FileUtils.cp_r(src_path, mod_path)
       FileUtils.rm_rf("#{mod_path}/.git")
     end
