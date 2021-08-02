@@ -20,13 +20,13 @@ class TerraspaceBundler::Mod
         type: type,
         url: url,
       )
-      o[:subfolder] ||= subfolder_slash_notation(@source)
-      o[:ref] ||= ref_slash_notation(@source)
+      o[:subfolder] ||= subfolder(@source)
+      o[:ref] ||= ref(@source)
       o
     end
 
     def name
-      remove_special_notations(@params[:args].first)
+      remove_notations(@params[:args].first)
     end
 
     # url is normalized
@@ -39,7 +39,7 @@ class TerraspaceBundler::Mod
             else # git
               git_source_url
             end
-      remove_special_notations(clone_with(url))
+      remove_notations(clone_with(url))
     end
 
     # apply clone_with option if set

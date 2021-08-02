@@ -30,7 +30,7 @@ class TerraspaceBundler::Mod::Props
          source.include?('::')          # git::https:://git.example.com/pet
          return false
       end
-      s = remove_special_notations(@props.source)
+      s = remove_notations(@props.source)
       (s.split('/').size == 3 || s.split('/').size == 4)
     end
   end
