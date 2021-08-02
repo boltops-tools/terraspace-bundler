@@ -62,7 +62,6 @@ class TerraspaceBundler::Mod::Fetcher
       stage_path = stage_path("#{@mod.copy_source_path}")
       FileUtils.rm_rf(stage_path)
       FileUtils.mkdir_p(File.dirname(stage_path))
-      puts "copy_to_stage cp -r #{cache_path} #{stage_path}"
       FileUtils.cp_r(cache_path, stage_path)
     end
   end
