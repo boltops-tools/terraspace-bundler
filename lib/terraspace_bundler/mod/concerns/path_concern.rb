@@ -28,16 +28,20 @@ module TerraspaceBundler::Mod::Concerns
     # Fetcher: Downloader/Local copies to a slightly different folder.
     # Also, Copy will use this and reference same method so it's consistent.
     def mod_relative_path
-      x = case @mod.type
+      case @mod.type
       when 'local'
         @mod.name
+      when 's3'
+        # s3::https://s3-us-west-2.amazonaws.com/demo-terraform-test/example-module.zip
+        source = @mod.source
+        url = source.sub('s3::','')
+        uri = URI(url)
+        uri.path.sub('/','') # removing leading slash, includes bucket name
       when -> (_) { @mod.source.include?('::') }
         @mod.source # IE: full path that includes git:: s3:: gcs::
       else # git, registry
         @mod.full_repo
       end
-      puts "mod_relative_path #{x}".color(:yellow)
-      x
     end
 
     def parent_stage_folder
