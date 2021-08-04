@@ -9,7 +9,12 @@ module TerraspaceBundler
       elsif archive.ends_with?('.zip')
         Zip.extract(archive, dest)
       else
-        raise "Unable to extract. Unknown archive extension for #{archive}."
+        puts <<~EOL.color(:red)
+          ERROR: Unable to extract. Unsupported archive extension for:
+
+              #{archive}
+        EOL
+        exit 1
       end
     end
   end
