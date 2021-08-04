@@ -36,7 +36,9 @@ module TerraspaceBundler::Mod::Concerns
         source = @mod.source
         url = source.sub('s3::','')
         uri = URI(url)
-        uri.path.sub('/','') # removing leading slash, includes bucket name
+        path = uri.path.sub('/','').sub(%r{//(.*)},'') # removing leading slash to bucket name is the first thing and remove subfolder
+        ext = File.extname(path)
+        path.sub(ext,'')
       when -> (_) { @mod.source.include?('::') }
         @mod.source # IE: full path that includes git:: s3:: gcs::
       else # git, registry
