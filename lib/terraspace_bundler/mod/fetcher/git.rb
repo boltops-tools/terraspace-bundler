@@ -22,7 +22,8 @@ class TerraspaceBundler::Mod::Fetcher
     memoize :run
 
     def clone
-      sh "git clone #{@mod.url}"
+      command = ["git clone", ENV['TB_GIT_CLONE_ARGS'], @mod.url].compact.join(' ')
+      sh command
     rescue TB::GitError => e
       logger.error "ERROR: #{e.message}".color(:red)
       exit 1
