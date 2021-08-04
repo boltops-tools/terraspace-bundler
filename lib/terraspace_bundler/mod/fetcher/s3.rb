@@ -15,7 +15,7 @@ class TerraspaceBundler::Mod::Fetcher
       response_target = cache_path(path) # temporary path
 
       unless File.exist?(response_target)
-        logger.debug "S3 saving to #{response_target}".color(:yellow)
+        logger.debug "S3 save archive to #{response_target}".color(:yellow)
         FileUtils.mkdir_p(File.dirname(response_target))
         s3(region).get_object(
           response_target: response_target,

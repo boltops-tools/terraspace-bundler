@@ -23,7 +23,7 @@ class TerraspaceBundler::Mod::Fetcher
       end
 
       archive = cache_path(path) # temporary path
-      logger.debug "Gcs download archive to: #{archive}"
+      logger.debug "Gcs save archive to #{archive}"
       FileUtils.mkdir_p(File.dirname(archive))
       file.download(archive)
 
