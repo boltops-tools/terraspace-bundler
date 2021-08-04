@@ -58,18 +58,19 @@ module TerraspaceBundler::Mod::Concerns
       source = @mod.source
       url = source.sub("#{@mod.type}::",'')
       uri = URI(url)
-      uri.path.sub('/','').sub(%r{//(.*)},'') # removing leading slash to bucket name is the first thing and remove subfolder
-    end
-
-    def remove_subfolder(path)
-      md = path.match(%r{//(.*)})
-      subfolder = md[1] if md
-      path.sub("//#{subfolder}",'')
+      uri.path.sub('/','')   # removing leading slash to bucket name is the first thing
+         .sub(%r{//(.*)},'') # remove subfolder
     end
 
     def remove_ext(path)
       ext = File.extname(path)
       path.sub(ext,'')
+    end
+
+    def get_bucket_key(path)
+      bucket, *rest = path.split('/')
+      key = rest.join('/')
+      [bucket, key]
     end
 
     def mod_path

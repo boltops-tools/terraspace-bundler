@@ -32,9 +32,7 @@ class TerraspaceBundler::Mod::Fetcher
   private
     def s3_info
       path = type_path
-      path = remove_subfolder(path)
-      bucket, *rest = path.split('/')
-      key = rest.join('/')
+      bucket, key = get_bucket_key(path)
 
       url = @mod.source.sub('s3::','')
       uri = URI(url)

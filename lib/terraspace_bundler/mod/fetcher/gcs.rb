@@ -35,10 +35,8 @@ class TerraspaceBundler::Mod::Fetcher
   private
     def gcs_info
       path = type_path
-      path = remove_subfolder(path)
       path.sub!(%r{storage/v\d+/},'')
-      bucket, *rest = path.split('/')
-      key = rest.join('/')
+      bucket, key = get_bucket_key(path)
       [bucket, key, path]
     end
 
