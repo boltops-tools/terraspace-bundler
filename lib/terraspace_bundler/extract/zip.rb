@@ -14,9 +14,3 @@ class TerraspaceBundler::Extract
     end
   end
 end
-
-# file = "/home/ec2-user/environment/downloads/s3/example-module.zip"
-# dest = "/tmp/terraspace/bundler/unzip/a1"
-# require 'fileutils'
-# FileUtils.mkdir_p(File.dirname(dest))
-# Extract::Zip.extract(file, dest)
