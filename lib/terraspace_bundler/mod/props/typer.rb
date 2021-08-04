@@ -12,12 +12,12 @@ class TerraspaceBundler::Mod::Props
 
     # IE: git or registry
     def type
-      if local?
+      if source.include?('::')
+        source.split('::').first # IE: git:: s3:: gcs::
+      elsif local?
         "local"
       elsif registry?
         "registry"
-      elsif source.include?('::')
-        source.split('::').first # IE: git:: s3:: gcs::
       else
         "git"
       end
