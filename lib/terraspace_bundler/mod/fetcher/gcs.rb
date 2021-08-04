@@ -16,9 +16,6 @@ class TerraspaceBundler::Mod::Fetcher
         logger.error "ERROR: bucket #{bucket_name} does not exist".color(:red)
         exit 1
       end
-      puts "bucket #{bucket}"
-      puts "bucket_name #{bucket_name}"
-      puts "key #{key}"
       file = bucket.file(key)
       unless file
         logger.error "ERROR: Unable to find gs://#{bucket_name}/#{key}".color(:red)
@@ -32,22 +29,14 @@ class TerraspaceBundler::Mod::Fetcher
 
       # Save to stage
       dest = stage_path(rel_dest_dir)
-      puts "archive #{archive}"
-      puts "dest #{dest}"
       extract(archive, dest)
     end
 
   private
     def gcs_info
-      source = @mod.source
-      url = source.sub('gcs::','')
-      uri = URI(url)
-      path = uri.path.sub('/','') # removing leading slash, includes bucket name. and remove subfolder
-      md = path.match(%r{//(.*)})
-      subfolder = md[1] if md
-      path.sub!("//#{subfolder}",'')
+      path = type_path
+      path = remove_subfolder(path)
       path.sub!(%r{storage/v\d+/},'')
-      puts "path #{path}"
       bucket, *rest = path.split('/')
       key = rest.join('/')
       [bucket, key, path]

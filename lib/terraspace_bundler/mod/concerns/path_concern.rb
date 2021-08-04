@@ -28,7 +28,6 @@ module TerraspaceBundler::Mod::Concerns
     # Fetcher: Downloader/Local copies to a slightly different folder.
     # Also, Copy will use this and reference same method so it's consistent.
     def rel_dest_dir
-      puts "@mod.type #{@mod.type}"
       case @mod.type
       when 'local'
         @mod.name
@@ -37,7 +36,6 @@ module TerraspaceBundler::Mod::Concerns
         remove_ext(path)
       when 'gcs'
         path = type_path # https://www.googleapis.com/storage/v1/BUCKET_NAME/PATH/TO/module.zip
-        puts "path1 #{path}"
         path.sub!(%r{storage/v\d+/},'')
         remove_ext(path)
       when -> (_) { @mod.source.include?('::') }
@@ -60,9 +58,13 @@ module TerraspaceBundler::Mod::Concerns
       source = @mod.source
       url = source.sub("#{@mod.type}::",'')
       uri = URI(url)
-      path = uri.path.sub('/','').sub(%r{//(.*)},'') # removing leading slash to bucket name is the first thing and remove subfolder
-      puts "path #{path}".color(:yellow)
-      path
+      uri.path.sub('/','').sub(%r{//(.*)},'') # removing leading slash to bucket name is the first thing and remove subfolder
+    end
+
+    def remove_subfolder(path)
+      md = path.match(%r{//(.*)})
+      subfolder = md[1] if md
+      path.sub("//#{subfolder}",'')
     end
 
     def remove_ext(path)

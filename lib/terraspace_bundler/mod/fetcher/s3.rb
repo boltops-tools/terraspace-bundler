@@ -7,7 +7,10 @@ class TerraspaceBundler::Mod::Fetcher
 
     def run
       region, bucket, key, path = s3_info
+      download(region, bucket, key, path)
+    end
 
+    def download(region, bucket, key, path)
       # Download to cache area
       response_target = cache_path(path) # temporary path
 
@@ -28,13 +31,8 @@ class TerraspaceBundler::Mod::Fetcher
 
   private
     def s3_info
-      source = @mod.source
-      url = source.sub('s3::','')
-      uri = URI(url)
-      path = uri.path.sub('/','') # removing leading slash, includes bucket name. and remove subfolder
-      md = path.match(%r{//(.*)})
-      subfolder = md[1] if md
-      path = path.sub("//#{subfolder}",'')
+      path = type_path
+      path = remove_subfolder(path)
       bucket, *rest = path.split('/')
       key = rest.join('/')
 

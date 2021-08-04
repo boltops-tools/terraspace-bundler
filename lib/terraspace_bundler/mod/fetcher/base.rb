@@ -22,5 +22,6 @@ class TerraspaceBundler::Mod::Fetcher
     def extract(archive, dest)
       TerraspaceBundler::Extract.extract(archive, dest)
     end
+
   end
 end
