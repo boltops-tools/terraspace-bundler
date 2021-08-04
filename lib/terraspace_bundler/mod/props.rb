@@ -4,6 +4,7 @@ class TerraspaceBundler::Mod
   class Props
     extend Memoist
     include Concerns::NotationConcern
+    include TB::Util::Logging
 
     delegate :type, to: :typer
 
@@ -14,7 +15,15 @@ class TerraspaceBundler::Mod
       @source, @version = @options[:source], @options[:version]
     end
 
+    def name
+      remove_notations(@params[:args].first)
+    end
+
     def build
+      unless @source
+        logger.error "ERROR: The source option must be set for the #{name} mod in the Terrafile".color(:red)
+        exit 1
+      end
       o = @options.merge(
         name: name,
         type: type,
@@ -23,10 +32,6 @@ class TerraspaceBundler::Mod
       o[:subfolder] ||= subfolder(@source)
       o[:ref] ||= ref(@source)
       o
-    end
-
-    def name
-      remove_notations(@params[:args].first)
     end
 
     # url is normalized

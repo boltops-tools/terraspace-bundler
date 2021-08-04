@@ -18,12 +18,23 @@ class TerraspaceBundler::Mod::Props
         "local"
       elsif registry?
         "registry"
-      else
+      elsif git?
         "git"
+      else
+        "http"
       end
     end
 
   private
+    def git?
+      domains = %w[
+        github.com
+        bitbucket.org
+        gitlab.com
+      ]
+      domains.detect { |domain| source.include?(domain) }
+    end
+
     # dont use registry? externally. instead use type since it can miss local detection
     def registry?
       if source.nil? ||
