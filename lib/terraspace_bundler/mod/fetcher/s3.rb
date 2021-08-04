@@ -22,7 +22,7 @@ class TerraspaceBundler::Mod::Fetcher
       end
 
       # Save to stage
-      dest = stage_path(mod_relative_dir)
+      dest = stage_path(relative_dest_dir)
       extract(response_target, dest)
     end
 

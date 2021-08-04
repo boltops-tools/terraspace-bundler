@@ -27,7 +27,7 @@ module TerraspaceBundler::Mod::Concerns
 
     # Fetcher: Downloader/Local copies to a slightly different folder.
     # Also, Copy will use this and reference same method so it's consistent.
-    def mod_relative_dir
+    def relative_dest_dir
       case @mod.type
       when 'local'
         @mod.name
