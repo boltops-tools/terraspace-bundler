@@ -6,6 +6,28 @@ class TerraspaceBundler::Mod::Fetcher
     extend Memoist
 
     def run
+      region, bucket, key, path = s3_info
+
+      # Download to cache area
+      response_target = cache_path(path) # temporary path
+
+      unless File.exist?(response_target)
+        logger.debug "S3 saving to #{response_target}".color(:yellow)
+        FileUtils.mkdir_p(File.dirname(response_target))
+        s3(region).get_object(
+          response_target: response_target,
+          bucket: bucket,
+          key: key,
+        )
+      end
+
+      # Save to stage
+      dest = stage_path(mod_relative_path) # dest is a folder
+      extract(response_target, dest)
+    end
+
+  private
+    def s3_info
       source = @mod.source
       url = source.sub('s3::','')
       uri = URI(url)
@@ -24,23 +46,9 @@ class TerraspaceBundler::Mod::Fetcher
                  uri.host.match(/s3-(.*)\.amazonaws/)[1]
                end
 
-      # Download to cache area
-      response_target = cache_path(path) # temporary path
-
-      logger.debug("S3 saving to #{response_target}")
-      FileUtils.mkdir_p(File.dirname(response_target))
-      s3(region).get_object(
-        response_target: response_target,
-        bucket: bucket,
-        key: key,
-      )
-
-      # Save to stage
-      dest = stage_path(mod_relative_path) # dest is a folder
-      extract(response_target, dest)
+      [region, bucket, key, path]
     end
 
-  private
     def extract(archive, dest)
       TerraspaceBundler::Extract.extract(archive, dest)
     end
