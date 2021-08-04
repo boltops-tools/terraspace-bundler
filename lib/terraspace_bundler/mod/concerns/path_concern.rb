@@ -30,18 +30,18 @@ module TerraspaceBundler::Mod::Concerns
     def rel_dest_dir
       case @mod.type
       when 'local'
-        @mod.name
+        @mod.name      # example-module
       when 's3'
         path = type_path # https://s3-us-west-2.amazonaws.com/demo-terraform-test/example-module.zip
-        remove_ext(path)
+        remove_ext(path) # demo-terraform-test/modules/example-module
       when 'gcs'
         path = type_path # https://www.googleapis.com/storage/v1/BUCKET_NAME/PATH/TO/module.zip
         path.sub!(%r{storage/v\d+/},'')
-        remove_ext(path)
-      when -> (_) { @mod.source.include?('::') }
-        @mod.source # IE: full path that includes git:: s3:: gcs::
-      else # git, registry
-        @mod.full_repo
+        remove_ext(path) # terraform-example-modules/modules/example-module
+      when -> (_) { @mod.source.include?('git::') }
+        @mod.name      # example-module
+      else # inferred git, registry
+        @mod.full_repo #  tongueroo/example-module
       end
     end
 

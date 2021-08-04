@@ -41,6 +41,8 @@ class TerraspaceBundler::Mod
               registry.github_url
             when 'local'
               source
+            when 'http'
+              http_source_url
             else # git
               git_source_url
             end
@@ -56,6 +58,10 @@ class TerraspaceBundler::Mod
       else # git@
         url.sub(%r{http[s]?://(.*?)/},'git@\1:')
       end
+    end
+
+    def http_source_url
+
     end
 
     # git_source_url is normalized
