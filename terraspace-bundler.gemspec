@@ -23,6 +23,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "dsl_evaluator"
   spec.add_dependency "memoist"
   spec.add_dependency "rainbow"
+  spec.add_dependency "rubyzip"
   spec.add_dependency "thor"
   spec.add_dependency "zeitwerk"
 
