@@ -18,27 +18,28 @@ module TerraspaceBundler::Mod::Concerns
     end
 
     def cache_path(name)
-      "#{cache_root}/#{parent_stage_folder}/#{name}"
+      [cache_root, parent_stage_folder, name].compact.join('/')
     end
 
     def stage_path(name)
-      "#{stage_root}/#{parent_stage_folder}/#{name}"
+      [stage_root, parent_stage_folder, name].compact.join('/')
     end
 
     # Fetcher: Downloader/Local copies to a slightly different folder.
     # Also, Copy will use this and reference same method so it's consistent.
-    def relative_dest_dir
+    def rel_dest_dir
+      puts "@mod.type #{@mod.type}"
       case @mod.type
       when 'local'
         @mod.name
       when 's3'
-        # s3::https://s3-us-west-2.amazonaws.com/demo-terraform-test/example-module.zip
-        source = @mod.source
-        url = source.sub('s3::','')
-        uri = URI(url)
-        path = uri.path.sub('/','').sub(%r{//(.*)},'') # removing leading slash to bucket name is the first thing and remove subfolder
-        ext = File.extname(path)
-        path.sub(ext,'')
+        path = type_path # https://s3-us-west-2.amazonaws.com/demo-terraform-test/example-module.zip
+        remove_ext(path)
+      when 'gcs'
+        path = type_path # https://www.googleapis.com/storage/v1/BUCKET_NAME/PATH/TO/module.zip
+        puts "path1 #{path}"
+        path.sub!(%r{storage/v\d+/},'')
+        remove_ext(path)
       when -> (_) { @mod.source.include?('::') }
         @mod.source # IE: full path that includes git:: s3:: gcs::
       else # git, registry
@@ -47,7 +48,26 @@ module TerraspaceBundler::Mod::Concerns
     end
 
     def parent_stage_folder
-      @mod.local? ? "local" : @mod.vcs_provider
+      case @mod.type
+      when 'local'
+        'local'
+      else # gcs, s3, git, registry
+        @mod.vcs_provider
+      end
+    end
+
+    def type_path
+      source = @mod.source
+      url = source.sub("#{@mod.type}::",'')
+      uri = URI(url)
+      path = uri.path.sub('/','').sub(%r{//(.*)},'') # removing leading slash to bucket name is the first thing and remove subfolder
+      puts "path #{path}".color(:yellow)
+      path
+    end
+
+    def remove_ext(path)
+      ext = File.extname(path)
+      path.sub(ext,'')
     end
 
     def mod_path

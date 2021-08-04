@@ -22,7 +22,7 @@ class TerraspaceBundler::Mod::Fetcher
       end
 
       # Save to stage
-      dest = stage_path(relative_dest_dir)
+      dest = stage_path(rel_dest_dir)
       extract(response_target, dest)
     end
 
@@ -47,10 +47,6 @@ class TerraspaceBundler::Mod::Fetcher
                end
 
       [region, bucket, key, path]
-    end
-
-    def extract(archive, dest)
-      TerraspaceBundler::Extract.extract(archive, dest)
     end
 
     def s3(region)

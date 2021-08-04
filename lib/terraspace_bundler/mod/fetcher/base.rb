@@ -18,5 +18,9 @@ class TerraspaceBundler::Mod::Fetcher
     def switch_version(*)
       # noop
     end
+
+    def extract(archive, dest)
+      TerraspaceBundler::Extract.extract(archive, dest)
+    end
   end
 end

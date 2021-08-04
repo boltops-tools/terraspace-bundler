@@ -8,7 +8,6 @@ class TerraspaceBundler::Extract
     # tar_gz_archive = '/tmp/terraspace/bundler/stage/s3-us-west-2.amazonaws.com/demo-terraform-test/modules/example-module.tgz'
     # destination = '/tmp/terraspace/where/extract/to'
     def self.extract(tar_gz_archive, destination)
-      FileUtils.rm_rf(destination)
       reader = Zlib::GzipReader.open(tar_gz_archive)
       Gem::Package::TarReader.new(reader) do |tar|
         dest = nil
