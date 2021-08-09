@@ -28,7 +28,7 @@ module TerraspaceBundler::Mod::Concerns
     # Fetcher: Downloader/Local copies to a slightly different folder.
     # Also, Copy will use this and reference same method so it's consistent.
     def rel_dest_dir
-      case @mod.type
+      x = case @mod.type
       when 'local'
         @mod.name      # example-module
       when 's3'
@@ -38,17 +38,24 @@ module TerraspaceBundler::Mod::Concerns
         path = type_path # https://www.googleapis.com/storage/v1/BUCKET_NAME/PATH/TO/module.zip
         path.sub!(%r{storage/v\d+/},'')
         remove_ext(path) # terraform-example-modules/modules/example-module
+      when 'http'
+        path = type_path # https://www.googleapis.com/storage/v1/BUCKET_NAME/PATH/TO/module.zip
+        remove_ext(path) # terraform-example-modules/modules/example-module
       when -> (_) { @mod.source.include?('git::') }
         @mod.name      # example-module
       else # inferred git, registry
         @mod.full_repo #  tongueroo/example-module
       end
+      puts "rel_dest_dir #{x}"
+      x
     end
 
     def parent_stage_folder
       case @mod.type
       when 'local'
         'local'
+      when 'http'
+        'http'
       else # gcs, s3, git, registry
         @mod.vcs_provider
       end

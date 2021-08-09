@@ -23,6 +23,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "dsl_evaluator"
   spec.add_dependency "google-cloud-storage"
   spec.add_dependency "memoist"
+  spec.add_dependency "nokogiri"
   spec.add_dependency "rainbow"
   spec.add_dependency "rubyzip"
   spec.add_dependency "thor"

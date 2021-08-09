@@ -9,6 +9,10 @@ class TerraspaceBundler::Mod::Props
       define_method(name) do
         @props[name]
       end
+
+      define_method("#{name}=") do |v|
+        @props[name] = v
+      end
     end
   end
 end

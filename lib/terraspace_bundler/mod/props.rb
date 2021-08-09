@@ -61,7 +61,8 @@ class TerraspaceBundler::Mod
     end
 
     def http_source_url
-
+      source = Http::Source.new(@params)
+      source.url
     end
 
     # git_source_url is normalized
