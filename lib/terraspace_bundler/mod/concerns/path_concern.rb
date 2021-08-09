@@ -28,7 +28,7 @@ module TerraspaceBundler::Mod::Concerns
     # Fetcher: Downloader/Local copies to a slightly different folder.
     # Also, Copy will use this and reference same method so it's consistent.
     def rel_dest_dir
-      x = case @mod.type
+      case @mod.type
       when 'local'
         @mod.name      # example-module
       when 's3'
@@ -46,8 +46,6 @@ module TerraspaceBundler::Mod::Concerns
       else # inferred git, registry
         @mod.full_repo #  tongueroo/example-module
       end
-      puts "rel_dest_dir #{x}"
-      x
     end
 
     def parent_stage_folder

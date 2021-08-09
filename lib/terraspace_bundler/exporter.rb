@@ -26,7 +26,6 @@ module TerraspaceBundler
 
     def export(mod)
       fetcher = Mod::Fetcher.new(mod).instance
-      puts "fetcher #{fetcher}"
       fetcher.run
       fetcher.switch_version(mod.sha)
       copy = Copy.new(mod)
