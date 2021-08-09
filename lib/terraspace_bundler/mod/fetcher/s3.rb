@@ -17,11 +17,7 @@ class TerraspaceBundler::Mod::Fetcher
       unless File.exist?(response_target)
         logger.debug "S3 save archive to #{response_target}".color(:yellow)
         FileUtils.mkdir_p(File.dirname(response_target))
-        s3(region).get_object(
-          response_target: response_target,
-          bucket: bucket,
-          key: key,
-        )
+        s3_get(region, response_target, bucket, key)
       end
 
       # Save to stage
@@ -30,6 +26,23 @@ class TerraspaceBundler::Mod::Fetcher
     end
 
   private
+    def s3_get(region, response_target, bucket, key)
+      s3(region).get_object(
+        response_target: response_target,
+        bucket: bucket,
+        key: key,
+      )
+    rescue Aws::S3::Errors::NoSuchBucket, Aws::S3::Errors::NoSuchKey => e
+      logger.error(<<~EOL.color(:red))
+        ERROR: #{e.class} #{e.message}
+
+            bucket: #{bucket}
+            key: #{key}
+
+      EOL
+      exit 1
+    end
+
     def s3_info
       path = type_path
       bucket, key = get_bucket_key(path)
