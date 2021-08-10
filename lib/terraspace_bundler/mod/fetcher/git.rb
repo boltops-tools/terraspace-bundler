@@ -1,24 +1,18 @@
-class TerraspaceBundler::Mod
-  class Downloader
+class TerraspaceBundler::Mod::Fetcher
+  class Git < Base
     extend Memoist
-    include TB::Util::Git
-    include TB::Util::Logging
-    include TB::Mod::PathConcern
-
-    attr_reader :sha
-    def initialize(mod)
-      @mod = mod
-    end
 
     def run
       setup_tmp
-      org_path = "#{cache_root}/#{@mod.org}"
+      org_path = cache_path(@mod.org)
       FileUtils.mkdir_p(org_path)
 
       Dir.chdir(org_path) do
+        logger.debug "Current root dir: #{org_path}"
         clone unless File.exist?(@mod.repo)
 
         Dir.chdir(@mod.repo) do
+          logger.debug "Change dir: #{@mod.repo}"
           git "pull"
           git "submodule update --init"
           stage
@@ -28,7 +22,8 @@ class TerraspaceBundler::Mod
     memoize :run
 
     def clone
-      sh "git clone #{@mod.url}"
+      command = ["git clone", ENV['TB_GIT_CLONE_ARGS'], @mod.url].compact.join(' ')
+      sh command
     rescue TB::GitError => e
       logger.error "ERROR: #{e.message}".color(:red)
       exit 1
@@ -55,8 +50,7 @@ class TerraspaceBundler::Mod
     end
 
     def switch_version(version)
-      stage_path = stage_path("#{@mod.org}/#{@mod.repo}")
-      logger.debug "Within: #{stage_path}"
+      stage_path = stage_path(rel_dest_dir)
       Dir.chdir(stage_path) do
         git "checkout #{version}"
         @sha = git("rev-parse HEAD").strip
@@ -64,8 +58,8 @@ class TerraspaceBundler::Mod
     end
 
     def copy_to_stage
-      cache_path = cache_path("#{@mod.org}/#{@mod.repo}")
-      stage_path = stage_path("#{@mod.org}/#{@mod.repo}")
+      cache_path = cache_path(rel_dest_dir)
+      stage_path = stage_path(rel_dest_dir)
       FileUtils.rm_rf(stage_path)
       FileUtils.mkdir_p(File.dirname(stage_path))
       FileUtils.cp_r(cache_path, stage_path)

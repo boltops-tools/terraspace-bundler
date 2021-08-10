@@ -1,5 +1,5 @@
-class TerraspaceBundler::Mod
-  module PropsExtension
+class TerraspaceBundler::Mod::Props
+  module Extension
     def props(*names)
       names.each { |n| prop(n) }
     end
@@ -8,6 +8,10 @@ class TerraspaceBundler::Mod
       name = name.to_sym
       define_method(name) do
         @props[name]
+      end
+
+      define_method("#{name}=") do |v|
+        @props[name] = v
       end
     end
   end

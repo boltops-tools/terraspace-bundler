@@ -1,9 +1,10 @@
 module TerraspaceBundler
   class Mod
-    extend PropsExtension
-    props :export_to, :name, :sha, :source, :subfolder, :type, :url
+    extend Props::Extension
+    props :export_to, :name, :sha, :source, :subfolder, :type, :url, :clone_with
 
-    include StackConcern
+    include Concerns::StackConcern
+    include Concerns::LocalConcern
 
     attr_reader :props, :version, :ref, :tag, :branch
     def initialize(props={})
@@ -19,7 +20,7 @@ module TerraspaceBundler
 
     # use url instead of source because for registry modules, the repo name is different
     def repo
-      url_words[-1]
+      url_words[-1].sub(/\.git$/,'')
     end
 
     # https://github.com/tongueroo/pet - 2nd to last word
@@ -34,9 +35,19 @@ module TerraspaceBundler
     end
 
     def latest_sha
-      downloader = Downloader.new(self)
-      downloader.run
-      downloader.sha
+      fetcher = Fetcher.new(self).instance
+      fetcher.run
+      fetcher.sha
+    end
+
+    def vcs_provider
+      if url.include?('http')
+        # "https://github.com/org/repo"  => github.com
+        url.match(%r{http[s]?://(.*?)/})[1]
+      else # git@
+        # "git@github.com:org/repo"      => github.com
+        url.match(%r{git@(.*?):})[1]
+      end
     end
 
   private

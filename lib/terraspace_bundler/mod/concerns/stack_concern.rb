@@ -1,4 +1,4 @@
-class TerraspaceBundler::Mod
+module TerraspaceBundler::Mod::Concerns
   module StackConcern
     def stacks
       stacks = @props[:stacks] || @props[:stack]
