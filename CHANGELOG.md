@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 This project *loosely tries* to adhere to [Semantic Versioning](http://semver.org/), even before v1.0.
 
+## [0.4.0] - 2021-08-10
+- [#10](https://github.com/boltops-tools/terraspace-bundler/pull/10) terraspace bundle info: warning when no lockfile
+- [#12](https://github.com/boltops-tools/terraspace-bundler/pull/12) support for: private registry, s3, gcs, local
+
 ## [0.3.4] - 2021-04-15
 - [#11](https://github.com/boltops-tools/terraspace-bundler/pull/11) improve registry dectection and gitlab repository support
 
