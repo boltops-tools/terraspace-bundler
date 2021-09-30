@@ -5,6 +5,8 @@ module TerraspaceBundler::Mod::Concerns
       return unless stacks
       if all_stacks?(stacks)
         stacks = all_stacks
+      elsif stacks.is_a?(Array)
+        stacks = array_stacks(stacks)
       end
       normalize_stacks(stacks)
     end
@@ -25,6 +27,19 @@ module TerraspaceBundler::Mod::Concerns
           name: example,
           src: example,
         }
+      end
+    end
+
+    def array_stacks(stacks)
+      stacks.map do |example|
+        if example.is_a?(Hash)
+          example
+        else
+          {
+            name: example,
+            src: example,
+          }
+        end
       end
     end
 
