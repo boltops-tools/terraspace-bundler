@@ -3,6 +3,9 @@
 All notable changes to this project will be documented in this file.
 This project *loosely tries* to adhere to [Semantic Versioning](http://semver.org/), even before v1.0.
 
+## [0.4.2] - 2021-10-02
+- stack src option: also understand example and name
+
 ## [0.4.1] - 2021-09-30
 - [#13](https://github.com/boltops-tools/terraspace-bundler/pull/13) fix stacks Array option
 
