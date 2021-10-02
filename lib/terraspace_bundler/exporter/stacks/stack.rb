@@ -3,6 +3,7 @@ class TerraspaceBundler::Exporter::Stacks
     attr_reader :mod
     def initialize(mod, options={})
       @mod, @options = mod, options
+      @src = @options[:src] || @options[:example] || @options[:name]
     end
 
     def export
@@ -25,7 +26,7 @@ class TerraspaceBundler::Exporter::Stacks
     end
 
     def src
-      src = @options[:src]
+      src = @src
       without_examples = [mod_path, src].compact.join('/')
       with_examples = [examples_folder, src].compact.join('/')
       paths = [with_examples, without_examples]
