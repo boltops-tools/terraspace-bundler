@@ -85,20 +85,17 @@ class TerraspaceBundler::Mod
     def public_github_url
       base_site = "https://registry.terraform.io"
       base_url = "#{base_site}/v1/modules"
-      version = @version.sub(/^v/,'') if @version # v1.0 => 1.0
+      version = get_version(base_url)
       api_url = [base_url, @source, version, "download"].compact.join('/')
 
       resp = http_request(api_url)
 
       case resp.code.to_i
-      when 204
-        download_url = resp.header["x-terraform-get"]
-      when 302
-        next_url = "#{base_site}#{resp.header["location"]}"
-        resp = http_request(next_url)
+      when 204 # IE: curl -v https://registry.terraform.io/v1/modules/terraform-aws-modules/security-group/aws/3.10.0/download
         download_url = resp.header["x-terraform-get"]
       else
         logger.error "ERROR: Unable to lookup up module in Terraform Registry: #{@source}".color(:red)
+        logger.error "api_url: #{api_url}"
         puts "resp.code #{resp.code}"
         pp resp
         exit 1
@@ -107,6 +104,14 @@ class TerraspaceBundler::Mod
       url = download_url.sub(%r{/archive/.*},'')
       # IE: git::https://github.com/terraform-aws-modules/terraform-aws-security-group?ref=v3.10.0
       url.sub(/^git::/,'').sub(/\?.*/,'')
+    end
+
+    def get_version(base_url)
+      return @version.sub(/^v/,'') if @version # v1.0 => 1.0
+      api_url = [base_url, @source].join('/')
+      resp = http_request(api_url)
+      data = JSON.load(resp.body)
+      data['version']
     end
 
   private
