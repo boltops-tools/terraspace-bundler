@@ -39,5 +39,15 @@ class TerraspaceBundler::CLI
       TB.update_mode = true
       TB::Runner.new(options.merge(mods: mods)).run
     end
+
+    desc "example MOD EXAMPLE", "Import example from module as a stack"
+    long_desc Help.text("bundle/example")
+    terrafile_option.call
+    option :name, desc: "The stack name. IE: app/stacks/NAME. By default, the mod's name is used.	"
+    option :dest, default: "app/stacks", desc: "The default destination folder is app/stacks. Though you can change it to locations like vendor/stacks, it’s recommended to keep the default."
+    option :purge, type: :boolean, default: true, desc: "If set to `true`, then the existing `app/stacks/vpc` folder is removed."
+    def example(mod, example)
+      TB::Example.new(options.merge(mod: mod, example: example)).run
+    end
   end
 end
