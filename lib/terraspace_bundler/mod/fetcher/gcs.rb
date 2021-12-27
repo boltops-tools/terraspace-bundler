@@ -1,4 +1,25 @@
-require "google/cloud/storage"
+begin
+  require "google/cloud/storage"
+rescue LoadError => e
+  $stderr.puts "#{e.class}: #{e.message}".color(:red)
+  $stderr.puts <<~EOL
+
+    Unable to: require "google/cloud/storage"
+
+    In order to use gcs as a terraspace bundler source,
+    please add the google-cloud-storage gem to
+    your Terraspace project's Gemfile and run bundle.
+
+    To add the gem to your Gemfile, you can run:
+
+        bundle add google-cloud-storage
+
+    Then download modules in defined your Terrafile with:
+
+        terraspace bundle
+  EOL
+  exit 1
+end
 
 class TerraspaceBundler::Mod::Fetcher
   class Gcs < Base
