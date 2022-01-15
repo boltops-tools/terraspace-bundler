@@ -1,0 +1,39 @@
+# Here's an example Terrafile that can be used to qa the different types of sources.
+# Based on: https://terraspace.cloud/docs/terrafile/sources/
+# Note: Actually need to make sure that have access to the sources, IE: s3, gcs, github, etc
+# This is still useful as an example to help with QA.
+
+# Use modules from the Terraform registry
+mod "sqs", source: "terraform-aws-modules/sqs/aws"
+mod "s3", source: "git@github.com:boltops-tools/terraform-aws-s3"
+mod "s3test", source: "boltops-tools/terraform-aws-s3"
+
+mod "test1", source: "git::https://github.com/boltops-tools/terraform-aws-s3"
+mod "test2", source: "git::ssh://ec2-user@localhost:/home/ec2-user/environment/repo"
+mod "test3", source: "git::ssh://ec2-user@localhost:environment/repo"
+mod "test4", source: "git::ssh://localhost:environment/repo"
+mod "test5", source: "ssh://ec2-user@localhost/home/ec2-user/environment/repo"
+mod "test6", source: "ssh://ec2-user@localhost:/home/ec2-user/environment/repo"
+mod "test7", source: "ssh://ec2-user@localhost:/home/ec2-user/environment/repo//subfolder"
+mod "test8", source: "ssh://ec2-user@localhost:environment/repo"
+mod "test9", source: "ssh://ec2-user@localhost:repo"
+
+mod "pet1", source: "tongueroo/pet"
+mod "pet2", source: "https://github.com/tongueroo/pet"
+mod "example1", source: "git@bitbucket.org:tongueroo/example-module.git"
+mod "example2", source: "git@gitlab.com:tongueroo/example-module"
+
+org "tongueroo"
+mod "pet3", source: "pet" # inferred org
+
+mod "sg", source: "terraform-aws-modules/security-group/aws" # terraform registry public example
+mod "pet4", source: "app.terraform.io/boltops/pet/random" # , clone_with: "https"
+
+mod "demo1", source: "s3::https://s3-us-west-2.amazonaws.com/demo-terraform-test/modules/example-module.tgz"
+mod "demo2", source: "s3::https://s3-us-west-2.amazonaws.com/demo-terraform-test/modules/example-module.zip"
+mod "demo3", source: "gcs::https://www.googleapis.com/storage/v1/terraform-example-modules/modules/example-module.zip//subfolder"
+mod "demo4", source: "gcs::https://www.googleapis.com/storage/v1/terraform-example-modules/modules/example-module.tgz//subfolder"
+
+mod "local1", source: "/home/ec2-user/environment/downloads/example-module"
+mod "local2", source: "./example-module"
+mod "local3", source: "~/environment/infra-terrafile/example-module"

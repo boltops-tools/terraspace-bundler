@@ -1,7 +1,7 @@
 class TerraspaceBundler::Dsl
   module Syntax
-    def org(url)
-      config.org = url
+    def org(value)
+      config.org = value
     end
     alias_method :user, :org
 

@@ -1,7 +1,9 @@
 module TerraspaceBundler
   class Mod
+    extend Memoist
     extend Props::Extension
     props :export_to, :name, :sha, :source, :subfolder, :type, :url, :clone_with
+    delegate :repo, :org, :repo_folder, :org_folder, to: :org_repo
 
     include Concerns::StackConcern
     include Concerns::LocalConcern
@@ -18,22 +20,6 @@ module TerraspaceBundler
       @version || @ref || @tag || @branch
     end
 
-    # use url instead of source because for registry modules, the repo name is different
-    def repo
-      url_words[-1].sub(/\.git$/,'')
-    end
-
-    # https://github.com/tongueroo/pet - 2nd to last word
-    # git@github.com:tongueroo/pet - 2nd to last word without chars before :
-    def org
-      s = url_words[-2] # second to last word
-      s.split(':').last # in case of git@github.com:tongueroo/pet form
-    end
-
-    def full_repo
-      "#{org}/#{repo}"
-    end
-
     def latest_sha
       fetcher = Fetcher.new(self).instance
       fetcher.run
@@ -44,15 +30,18 @@ module TerraspaceBundler
       if url.include?('http')
         # "https://github.com/org/repo"  => github.com
         url.match(%r{http[s]?://(.*?)/})[1]
-      else # git@
+      elsif url.include?('http') # git@
         # "git@github.com:org/repo"      => github.com
         url.match(%r{git@(.*?):})[1]
+      else # ssh://user@domain.com/path/to/repo
+        'none'
       end
     end
 
   private
-    def url_words
-      url.split('/')
+    def org_repo
+      OrgRepo.new(url)
     end
+    memoize :org_repo
   end
 end
