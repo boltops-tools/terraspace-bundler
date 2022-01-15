@@ -18,11 +18,11 @@ module TerraspaceBundler::Mod::Concerns
     end
 
     def cache_path(name)
-      [cache_root, parent_stage_folder, name].compact.join('/')
+      [cache_root, @mod.type, name].compact.join('/')
     end
 
     def stage_path(name)
-      [stage_root, parent_stage_folder, name].compact.join('/')
+      [stage_root, @mod.type, name].compact.join('/')
     end
 
     # Fetcher: Downloader/Local copies to a slightly different folder.
@@ -41,21 +41,8 @@ module TerraspaceBundler::Mod::Concerns
       when 'http'
         path = type_path # https://www.googleapis.com/storage/v1/BUCKET_NAME/PATH/TO/module.zip
         remove_ext(path) # terraform-example-modules/modules/example-module
-      when -> (_) { @mod.source.include?('git::') }
-        @mod.name      # example-module
-      else # inferred git, registry
-        @mod.full_repo #  tongueroo/example-module
-      end
-    end
-
-    def parent_stage_folder
-      case @mod.type
-      when 'local'
-        'local'
-      when 'http'
-        'http'
-      else # gcs, s3, git, registry
-        @mod.vcs_provider
+      else # inferred git, registry, git::, ssh://, git::ssh://
+        @mod.repo_folder #  tongueroo/example-module
       end
     end
 

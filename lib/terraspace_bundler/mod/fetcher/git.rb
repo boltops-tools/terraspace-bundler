@@ -4,11 +4,11 @@ class TerraspaceBundler::Mod::Fetcher
 
     def run
       setup_tmp
-      org_path = cache_path(@mod.org)
-      FileUtils.mkdir_p(org_path)
+      org_folder = cache_path(@mod.org_folder)
+      FileUtils.mkdir_p(org_folder)
 
-      Dir.chdir(org_path) do
-        logger.debug "Current root dir: #{org_path}"
+      Dir.chdir(org_folder) do
+        logger.debug "Current root dir: #{org_folder}"
         clone unless File.exist?(@mod.repo)
 
         Dir.chdir(@mod.repo) do
@@ -45,12 +45,13 @@ class TerraspaceBundler::Mod::Fetcher
       if found
         found.split(':').last.strip
       else
-        'master'
+        ENV['TS_GIT_DEFAULT_BRANCH'] || 'master'
       end
     end
 
     def switch_version(version)
       stage_path = stage_path(rel_dest_dir)
+      logger.debug "stage_path #{stage_path}"
       Dir.chdir(stage_path) do
         git "checkout #{version}"
         @sha = git("rev-parse HEAD").strip

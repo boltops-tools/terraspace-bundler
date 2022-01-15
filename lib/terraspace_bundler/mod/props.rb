@@ -66,6 +66,20 @@ class TerraspaceBundler::Mod
     end
 
     # git_source_url is normalized
+    #
+    # See: https://stackoverflow.com/questions/6167905/git-clone-through-ssh
+    #
+    #    ssh://username@host.xz/absolute/path/to/repo.git/ - just a forward slash for absolute path on server
+    #    username@host.xz:relative/path/to/repo.git/ - just a colon (it mustn't have the ssh:// for relative path on server (relative to home dir of username on server machine)
+    #
+    # When colon is separator for relative path do not want ssh prepended
+    #
+    #   git clone ec2-user@localhost:repo
+    #
+    # When slash is separator for absolute path want ssh prepended
+    #
+    #   git clone ssh://ec2-user@localhost/path/to/repo => valid URI
+    #
     def git_source_url
       if @source.include?('http') || @source.include?(':')
         # Examples:
@@ -76,7 +90,15 @@ class TerraspaceBundler::Mod
         #   mod "example3", source: "git::https://example.com/example-module.git"
         #
         # sub to allow for generic git repo notiation
-        @source.sub('git::','')
+        source = @source.sub('git::','')
+        if source.include?('ssh://')
+          if source.count(':') == 1
+            return source
+          else
+            return source.sub('ssh://', '')
+          end
+        end
+        source
       else
         # Examples:
         #   mod "pet", source: "tongueroo/pet"

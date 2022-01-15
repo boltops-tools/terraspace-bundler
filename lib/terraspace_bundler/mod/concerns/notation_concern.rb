@@ -11,7 +11,8 @@ module TerraspaceBundler::Mod::Concerns
     end
 
     def remove_subfolder_notation(source)
-      parts = clean_notation(source).split('//')
+      clean = clean_notation(source)
+      parts = clean.split('//')
       if parts.size == 2 # has subfolder
         source.split('//')[0..-2].join('//') # remove only subfolder, keep rest of original source
       else
@@ -20,7 +21,8 @@ module TerraspaceBundler::Mod::Concerns
     end
 
     def subfolder(source)
-      parts = clean_notation(source).split('//')
+      clean = clean_notation(source)
+      parts = clean.split('//')
       if parts.size == 2 # has subfolder
         remove_ref_notation(parts.last)
       end
@@ -35,8 +37,23 @@ module TerraspaceBundler::Mod::Concerns
       end
     end
 
+
     def clean_notation(source)
-      source.sub(/.*::/,'').sub(%r{http[s?]://},'').sub(%r{git@(.*?):},'') # also remove git@ notation
+      clean = source
+        .sub(/.*::/,'')            # remove git::
+        .sub(%r{http[s?]://},'')   # remove https://
+        .sub(%r{git@(.*?):},'')    # remove git@word
+      remove_host(clean)
+    end
+
+    def remove_host(clean)
+      return clean unless clean.include?('ssh://')
+      if clean.count(':') == 1
+        uri = URI(clean)
+        uri.path
+      else
+        clean.split(':').last
+      end
     end
   end
 end
