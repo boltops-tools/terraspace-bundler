@@ -3,6 +3,9 @@
 All notable changes to this project will be documented in this file.
 This project *loosely tries* to adhere to [Semantic Versioning](http://semver.org/), even before v1.0.
 
+## [0.5.0] - 2022-01-15
+- [#17](https://github.com/boltops-tools/terraspace-bundler/pull/17) ssh notation support
+
 ## [0.4.3] - 2021-11-20
 - [#14](https://github.com/boltops-tools/terraspace-bundler/pull/14) get version and use only that part of api since the latest version is currently down with a 502
 - [#15](https://github.com/boltops-tools/terraspace-bundler/pull/15) terraspace bundle example command
