@@ -23,5 +23,14 @@ class TerraspaceBundler::Mod::Fetcher
       TerraspaceBundler::Extract.extract(archive, dest)
     end
 
+    # If outdated? is implemented, subclass should also implement:
+    # current_version, latest_version, commits_ahead
+    # See git fetcher for example.
+    def outdated?(*)
+      logger.debug "WARN: outdated? called for #{@mod.name}. outdated? not supported by #{self.class}"
+      # return nil. It's used to filter out fetchers that don't support outdated
+      nil
+    end
+
   end
 end

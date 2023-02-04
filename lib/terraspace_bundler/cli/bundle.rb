@@ -11,6 +11,15 @@ class TerraspaceBundler::CLI
       TB::List.new(options).run
     end
 
+    desc "outdated", "List installed modules with newer versions available"
+    long_desc Help.text("bundle/outdated")
+    terrafile_option.call
+    formats = CliFormat.formats - ["equal"]
+    option :format, desc: "Output formats: #{formats.sort.join(', ')}"
+    def outdated
+      TB::Outdated.new(options).run
+    end
+
     desc "info MOD", "Provide info about a bundled module."
     long_desc Help.text("bundle/info")
     terrafile_option.call
@@ -25,19 +34,19 @@ class TerraspaceBundler::CLI
       TB::Runner.new(options).run
     end
 
-    desc "purge_cache", "Purge cache."
-    long_desc Help.text("bundle/purge_cache")
-    option :yes, aliases: :y, type: :boolean, desc: "bypass are you sure prompt"
-    def purge_cache
-      PurgeCache.new(options).run
-    end
-
     desc "update [MOD]", "Update bundled modules."
     long_desc Help.text("bundle/update")
     terrafile_option.call
     def update(*mods)
       TB.update_mode = true
       TB::Runner.new(options.merge(mods: mods)).run
+    end
+
+    desc "purge_cache", "Purge cache."
+    long_desc Help.text("bundle/purge_cache")
+    option :yes, aliases: :y, type: :boolean, desc: "bypass are you sure prompt"
+    def purge_cache
+      PurgeCache.new(options).run
     end
 
     desc "example MOD EXAMPLE", "Import example from module as a stack"

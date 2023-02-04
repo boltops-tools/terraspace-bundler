@@ -4,7 +4,7 @@ module TerraspaceBundler
       file = TB.config.lockfile
       unless File.exist?(file)
         logger.info "No #{file} found".color(:red)
-        logger.info "Maybe run: terraspace bundle"
+        logger.info "Maybe first run: terraspace bundle"
         return
       end
 
