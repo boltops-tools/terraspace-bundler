@@ -5,7 +5,7 @@
 #
 class TerraspaceBundler::Mod
   class Fetcher
-    delegate :outdated?, :current_version, :latest_version, to: :interface
+    delegate :outdated?, :outdated_supported?, :current_version, :latest_version, to: :interface
     def initialize(mod)
       @mod = mod
     end

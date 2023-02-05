@@ -12,8 +12,10 @@ module TerraspaceBundler
 
       logger.info "Modules included by #{file}\n\n"
       lockfile.mods.each do |mod|
-        mod.sync_cache # so mod.current_version is available
-        logger.info "    #{mod.name} (#{normalize_version(mod.current_version)})"
+        if mod.outdated_supported?
+          current_version = " (#{normalize_version(mod.current_version)})"
+        end
+        logger.info "    #{mod.name}#{current_version}"
       end
       logger.info "\nUse `terraspace bundle info` to print more detailed information about a module"
     end

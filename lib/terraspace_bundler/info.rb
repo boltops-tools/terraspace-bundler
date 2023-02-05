@@ -1,5 +1,7 @@
 module TerraspaceBundler
   class Info < TB::CLI::Base
+    include Util::NormalizeVersion
+
     def run
       file = TB.config.lockfile
       unless File.exist?(file)
@@ -19,7 +21,14 @@ module TerraspaceBundler
 
     def show(mod)
       props = mod.props.reject { |k,v| k == :name }.stringify_keys # for sort
-      puts "#{mod.name}:"
+
+      props = props.dup
+      # Only git fetcher supported currently. IE: s3 is not supported.
+      if mod.outdated_supported?
+        current_version = " (#{normalize_version(mod.current_version)})"
+      end
+
+      puts "#{mod.name}#{current_version}"
       props.keys.sort.each do |k|
         puts "    #{k}: #{props[k]}"
       end

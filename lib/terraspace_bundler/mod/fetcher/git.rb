@@ -34,6 +34,10 @@ class TerraspaceBundler::Mod::Fetcher
       @full_cache_path
     end
 
+    def sync_cache_at_least_once
+      sync_cache unless @full_cache_path
+    end
+
     attr_reader :commits_ahead
     def get_commits_ahead
       count = git("rev-list --count #{current_version}..#{latest_version}").strip.to_i
@@ -75,11 +79,16 @@ class TerraspaceBundler::Mod::Fetcher
     end
 
     def outdated?
-      sync_cache
+      sync_cache_at_least_once
       outdated = nil
       Dir.chdir(@full_cache_path) do
         outdated = current_version != latest_version
       end
+    end
+
+    def outdated_supported?
+      sync_cache_at_least_once
+      true
     end
 
     # tag to sha map
