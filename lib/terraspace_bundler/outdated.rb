@@ -3,6 +3,8 @@ CliFormat.default_format = "table"
 
 module TerraspaceBundler
   class Outdated < TB::CLI::Base
+    include Util::NormalizeVersion
+
     def run
       file = TB.config.lockfile
       unless File.exist?(file)
@@ -27,8 +29,8 @@ module TerraspaceBundler
         direction = mod.commits_ahead > 0 ? "ahead" : "behind"
         row = [
           mod.name,
-          normalize(mod.current_version),
-          "#{normalize(mod.latest_version)} (#{commits_ahead} #{direction})",
+          normalize_version(mod.current_version),
+          "#{normalize_version(mod.latest_version)} (#{commits_ahead} #{direction})",
         ]
         presenter.rows << row
       end
@@ -43,18 +45,6 @@ module TerraspaceBundler
 
     def lockfile
       Lockfile.instance
-    end
-
-    def normalize(version)
-      return unless version
-      # remove leading v. IE: v1.0.0 => 1.0.0
-      version = version.sub(/^v(\d)/, '\1')
-      # looks like sha https://stackoverflow.com/questions/468370/a-regex-to-match-a-sha1
-      if version =~ /\b[0-9a-f]{40}\b/
-        version[0..6]
-      else
-        version
-      end
     end
   end
 end

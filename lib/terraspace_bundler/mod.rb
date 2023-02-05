@@ -20,7 +20,7 @@ module TerraspaceBundler
       @version || @ref || @tag || @branch
     end
 
-    delegate :outdated?, :current_version, :latest_version, :commits_ahead, to: :fetcher
+    delegate :sync_cache, :outdated?, :current_version, :latest_version, :commits_ahead, to: :fetcher
     def fetcher
       Fetcher.new(self).interface
     end

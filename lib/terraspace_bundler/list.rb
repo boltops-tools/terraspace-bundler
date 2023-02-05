@@ -1,5 +1,7 @@
 module TerraspaceBundler
   class List < TB::CLI::Base
+    include Util::NormalizeVersion
+
     def run
       file = TB.config.lockfile
       unless File.exist?(file)
@@ -10,7 +12,8 @@ module TerraspaceBundler
 
       logger.info "Modules included by #{file}\n\n"
       lockfile.mods.each do |mod|
-        logger.info "    #{mod.name}"
+        mod.sync_cache # so mod.current_version is available
+        logger.info "    #{mod.name} (#{normalize_version(mod.current_version)})"
       end
       logger.info "\nUse `terraspace bundle info` to print more detailed information about a module"
     end
