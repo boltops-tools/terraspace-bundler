@@ -1,10 +1,16 @@
 describe TB::Exporter::Stacks::Rewrite do
-  let(:rewrite) { described_class.new(stack) }
-  let(:stack) do
-    stack = double(:stack).as_null_object
-    allow(stack).to receive(:name).and_return("stack_name")
-    stack
+  let(:rewrite) { described_class.new(options) }
+  let(:options) do
+    {
+      folder: "whatever",
+      mod_name: "stack_name",
+    }
   end
+  # let(:stack) do
+  #   stack = double(:stack).as_null_object
+  #   allow(stack).to receive(:name).and_return("stack_name")
+  #   stack
+  # end
 
   before(:each) do
     allow(IO).to receive(:write) do |path, text|

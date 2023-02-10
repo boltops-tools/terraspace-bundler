@@ -1,11 +1,12 @@
 class TerraspaceBundler::Exporter::Stacks
   class Rewrite < Base
-    def initialize(stack)
-      @stack = stack
+    def initialize(options={})
+      @folder = options[:folder]     # IE: /app/stacks/pet1
+      @mod_name = options[:mod_name] # IE: pet (from app/modules/pet)
     end
 
     def run
-      expr = "#{@stack.dest}/*.tf"
+      expr = "#{@folder}/*.tf"
       Dir.glob(expr).each do |path|
         next unless File.file?(path) # skip symlinks and dirs
         replace(path)
@@ -50,7 +51,7 @@ class TerraspaceBundler::Exporter::Stacks
       dirs = source_value.split('/')
       count = dirs.count('..')
       mod_dir = dirs[count..-1].join('/')
-      full_dir = [@stack.mod.name, mod_dir].reject(&:empty?).join('/')
+      full_dir = [@mod_name, mod_dir].reject(&:empty?).join('/')
       %Q|  source = "../../modules/#{full_dir}" #{terraspace_comment}\n|
     end
   end

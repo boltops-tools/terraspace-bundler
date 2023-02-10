@@ -22,7 +22,7 @@ class TerraspaceBundler::Exporter::Stacks
     end
 
     def rewrite
-      Rewrite.new(self).run
+      Rewrite.new(folder: dest, mod_name: @mod.name).run
     end
 
     def src
